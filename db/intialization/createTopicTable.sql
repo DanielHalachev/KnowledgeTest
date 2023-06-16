@@ -1,5 +1,0 @@
-CREATE TABLE topics (
-  id INT AUTO_INCREMENT NOT NULL,
-  name VARCHAR(100),
-  PRIMARY KEY(id)
-);

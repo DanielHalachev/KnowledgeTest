@@ -119,17 +119,16 @@ class TestController extends ControllerBase {
         $errors[] = "Invalid uploaderId";
       }
     }
-    if (array_key_exists("authorId", $data)) {
-      if (filter_var($data["authorId"], FILTER_VALIDATE_INT) === false) {
-        $errors[] = "Invalid authorId";
-      }
-    }
-    if (array_key_exists("topicId", $data)) {
-      if (filter_var($data["topicId"], FILTER_VALIDATE_INT) === false) {
-        $errors[] = "Invalid topicId";
-      }
-    }
-
+    // if (array_key_exists("authorId", $data)) {
+    //   if (filter_var($data["authorId"], FILTER_VALIDATE_INT) === false) {
+    //     $errors[] = "Invalid authorId";
+    //   }
+    // }
+    // if (array_key_exists("topicId", $data)) {
+    //   if (filter_var($data["topicId"], FILTER_VALIDATE_INT) === false) {
+    //     $errors[] = "Invalid topicId";
+    //   }
+    // }
     return $errors;
   }
 }

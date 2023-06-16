@@ -5,8 +5,8 @@ class TestGateway {
   private array $validFields = [
     'id',
     'uploaderId',
-    'authorId',
-    'topicId'
+    'author',
+    'topic'
   ];
   
   public function __construct(DatabaseConnection $databaseConnection) {
@@ -77,21 +77,21 @@ class TestGateway {
   }
 
   public function create(array $data): int {
-    $sql = "INSERT INTO `tests` (uploaderId, authorId, topicId) VALUES (:uploaderId, :authorId, :topicId)";
+    $sql = "INSERT INTO `tests` (uploaderId, author, topic) VALUES (:uploaderId, :author, :topic)";
     $statement = $this->connection->prepare($sql);
     $statement->bindValue(":uploaderId", $data["uploaderId"], PDO::PARAM_INT);
-    $statement->bindValue(":authorId", $data["authorId"] ?? null, PDO::PARAM_INT);
-    $statement->bindValue(":topicId", $data["topicId"] ?? null, PDO::PARAM_INT);
+    $statement->bindValue(":author", $data["author"] ?? null, PDO::PARAM_STR);
+    $statement->bindValue(":topic", $data["topic"] ?? null, PDO::PARAM_STR);
     $statement->execute();
     return $this->connection->lastInsertId();
   }
   
   public function update(array $current, array $new): int {
-    $sql = "UPDATE `tests` SET uploaderId = :uploaderId, authorId = :authorId, topicId = :topicId WHERE id = :id";
+    $sql = "UPDATE `tests` SET uploaderId = :uploaderId, author = :author, topic = :topic WHERE id = :id";
     $statement = $this->connection->prepare($sql);
     $statement->bindValue(":uploaderId", $new["uploaderId"] ?? $current["uploaderId"], PDO::PARAM_INT);
-    $statement->bindValue(":authorId", $new["authorId"] ?? $current["authorId"], PDO::PARAM_INT);
-    $statement->bindValue(":topicId", $new["topicId"] ?? $current["topicId"], PDO::PARAM_INT);
+    $statement->bindValue(":author", $new["author"] ?? $current["author"], PDO::PARAM_STR);
+    $statement->bindValue(":topic", $new["topic"] ?? $current["topic"], PDO::PARAM_STR);
     $statement->bindValue(":id", $current["id"], PDO::PARAM_INT);
     $statement->execute();
     return $statement->rowCount();
