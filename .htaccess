@@ -1,0 +1,7 @@
+RewriteEngine On
+RewriteBase /KnowledgeTestImproved/
+
+# Redirect requests to index.php
+RewriteCond %{REQUEST_URI} ^/KnowledgeTestImproved/api [NC]
+RewriteRule ^api(.*)$ api/index.php [L]
+SetEnv SECRET_KEY "5acz+lHjfPR+y/JY2F+5odjl2P81jNInDQr4WGSxW1Q="
