@@ -7,72 +7,146 @@
     <link href="./../css/common.css" rel="stylesheet" type="text/css">
     <link href="./../css/home.css" rel="stylesheet" type="text/css">
     <script src="https://kit.fontawesome.com/5c9473fc67.js" crossorigin="anonymous"></script>
+    <script src="../js/logout.js" defer></script>
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        // Retrieve token from the "token" cookie
-        const token = document.cookie
+    document.addEventListener("DOMContentLoaded", () => {
+      // Retrieve token from the "token" cookie
+      const token = document.cookie
           .split("; ")
           .find((row) => row.startsWith("token="))
           .split("=")[1];
+      // Fetch user data from the API using the bearer token
+      fetch("../api/users", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Extract user data
+        const {email, firstName, lastName, profilePicture } = data[0];
+        console.log(email);
 
-        // Fetch tests
-        fetch("../api/tests", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-          .then((response) => response.json())
-          .then((tests) => {
-            const testsSection = document.querySelector("#latest-tests");
+        // Set user details in the HTML
+        document.getElementById("firstName").textContent = firstName;
+        document.getElementById("lastName").textContent = lastName;
+        document.getElementById("email").textContent = email;
 
-            tests.forEach((test) => {
-              const testSection = document.createElement("section");
-              testSection.classList.add("test");
-
-              const testTitle = document.createElement("h3");
-              testTitle.textContent = test.title;
-
-              const testId = document.createElement("p");
-              testId.textContent = test.id;
-
-              const testQuestions = document.createElement("p");
-              testQuestions.textContent = `${test.questionsCount} въпроса`;
-
-              testSection.appendChild(testTitle);
-              testSection.appendChild(testId);
-              testSection.appendChild(testQuestions);
-              testsSection.appendChild(testSection);
-            });
-          })
-          .catch((error) => console.error("Error fetching tests:", error));
-
-        // Fetch questions
-        fetch("../api/questions", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-          .then((response) => response.json())
-          .then((questions) => {
-            const questionsSection = document.querySelector("#latest-questions");
-
-            questions.forEach((question) => {
-              const questionSection = document.createElement("section");
-              questionSection.classList.add("test");
-
-              const questionTitle = document.createElement("h3");
-              questionTitle.textContent = question.label;
-
-              const questionId = document.createElement("p");
-              questionId.textContent = question.id;
-
-              questionSection.appendChild(questionTitle);
-              questionSection.appendChild(questionId);
-              questionsSection.appendChild(questionSection);
-            });
-          })
-          .catch((error) => console.error("Error fetching questions:", error));
+        // Set the profile picture source
+        const imgSrc = profilePicture ? `../img/usr/${profilePicture}` : "../img/usr/profile.png";
+        document.getElementById("profilePicture").src = imgSrc;
+      })
+      .catch(error => {
+        console.error("Error fetching user data:", error);
       });
+    
+      // Fetch tests
+      fetch("../api/tests", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((tests) => {
+          const testsSection = document.querySelector("#latest-tests");
+
+          if (tests.length === 0) {
+            testsSection.innerHTML += "<p>Нямате създадени тестове.<p>";
+          } else {
+            tests.forEach((test) => {
+              // Fetch questions for each test
+              fetch(`../api/questions?testId=${test.id}`, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+                .then((response) => response.json())
+                .then((questions) => {
+                  const testSection = document.createElement("section");
+                  testSection.classList.add("test");
+
+                  const testLink = document.createElement("a");
+                  testLink.href = `testPreview.php?testId=${test.id}`;
+
+                  const testTitle = document.createElement("h3");
+                  testTitle.textContent = test.topic;
+
+                  const testAuthor = document.createElement("p");
+                  testAuthor.textContent = `Автор: ${test.author}`;
+
+                  const testQuestions = document.createElement("p");
+                  testQuestions.textContent = `Брой въпроси: ${questions.length}`;
+
+                  testLink.appendChild(testTitle);
+                  testSection.appendChild(testLink);
+                  testSection.appendChild(testAuthor);
+                  testSection.appendChild(testQuestions);
+                  testsSection.appendChild(testSection);
+                })
+                .catch((error) =>
+                  console.error("Error fetching questions:", error)
+                );
+            });
+          }
+        })
+        .catch((error) => console.error("Error fetching tests:", error));
+      // Fetch questions
+      fetch("../api/questions", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((questions) => {
+          const questionsSection = document.querySelector("#latest-questions");
+
+          if (questions.length === 0) {
+            questionsSection.innerHTML += "<p>Нямате създадени въпроси.</p>";
+          } else {
+            questions.forEach((question) => {
+              // Fetch test information for each question
+              fetch(`../api/tests/${question.testId}`, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+                .then((response) => response.json())
+                .then((test) => {
+                  const questionSection = document.createElement("section");
+                  questionSection.classList.add("question");
+
+                  const questionLink = document.createElement("a");
+                  questionLink.href = `questions.html?questionId=${question.id}`;
+
+                  const questionLabel = document.createElement("h3");
+                  questionLabel.textContent = question.label;
+
+                  const questionTest = document.createElement("p");
+                  questionTest.textContent = `Test: ${test.topic}`;
+
+                  const questionAim = document.createElement("p");
+                  questionAim.textContent = `Aim: ${question.aim}`;
+
+                  const questionIsMultipleChoice = document.createElement("p");
+                  questionIsMultipleChoice.textContent = `Multiple Choice: ${
+                    question.isMultipleChoice ? "Yes" : "No"
+                  }`;
+
+                  questionLink.appendChild(questionLabel);
+                  questionSection.appendChild(questionLink);
+                  questionSection.appendChild(questionTest);
+                  questionSection.appendChild(questionAim);
+                  questionSection.appendChild(questionIsMultipleChoice);
+                  questionsSection.appendChild(questionSection);
+                })
+                .catch((error) =>
+                  console.error("Error fetching test information:", error)
+                );
+            });
+          }
+        })
+        .catch((error) => console.error("Error fetching questions:", error));
+    });
     </script>
   </head>
   <body>
@@ -89,12 +163,12 @@
     <aside>
       <section class="activity">
         <h2>Профил</h2>
-        <img src="./../img/profile.png" alt=""/>
-        <p>FirstName</p>
-        <p>LastName</p>
-        <p>Email</p>
-        <button type="button"><span class="fa fa-power-off"></span>Изход</button>
-        <button type="button"><span class="fa fa-key"></span>Смяна на паролата</button>
+        <img id="profilePicture" src="./../img/usr/profile.png" alt="profile picture"/>
+        <p id="firstName">FirstName</p>
+        <p id="lastName">LastName</p>
+        <p id="email">Email</p>
+        <button type="button" onclick="logout()"><span class="fa fa-power-off"></span>Изход</button>
+        <button type="button" onclick="window.location = './changePassword.php'"><span class="fa fa-key"></span>Смяна на паролата</button>
         <button type="button"><span class="fa fa-user-slash"></span>Изтриване на профила</button>
       </section>
     </aside>
@@ -115,3 +189,4 @@
     </footer>
   </body>
 </html>
+
