@@ -1,0 +1,44 @@
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr;
+  grid-template-areas: 
+    "header" "main" "footer";
+}
+
+header {
+  grid-template: header;
+}
+
+main {
+  grid-template: main;
+}
+
+footer {
+  grid-template: footer;
+}
+
+main {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    "content"
+    "content";
+  padding: 20px 20px;
+  gap: 20px;
+}
+
+
+@media (min-width: 768px) {
+  main {
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "content content";
+  }
+  section.activity {
+    height: 80%;
+    width: 80%;
+    margin: auto;
+  }
+}

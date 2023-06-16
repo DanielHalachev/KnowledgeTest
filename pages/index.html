@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="bg">
+  <head>
+    <title>Начало</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="./../css/common.css" rel="stylesheet" type="text/css">
+    <link href="./../css/index.css" rel="stylesheet" type="text/css">
+    <script src="./../js/checkTestExistence.js" defer></script>
+    <script src="./../js/closeDialogOnOutsideClick.js" defer></script>
+    <script src="https://kit.fontawesome.com/5c9473fc67.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <h1><a href="./index.html">KnowledgeTest</a></h1>
+        <ul>
+          <a href="./index.html"><li><span class="fa fa-pen"></span>Правене на тест</li></a>
+          <a href=""><li><span class="fa fa-plus"></span>Създаване на тест</li></a>
+          <a href="./login.php"><li><span class="fa fa-right-to-bracket"></span>Вписване</li></a>
+          <a href="./register.php"><li><span class="fa fa-user-plus"></span>Регистрация</li></a>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <section class="activity">
+        <h2>Правене на тест</h2>
+        <form id="test-by-code" action="testPreview.php">
+          <input id="code-search" type="search" name="code-search" placeholder="Въведете код на тест">
+          <button type="submit"><span class="fa fa-search"></span>Търсене</button>
+        </form>
+        <dialog id="error-message">
+          <form>
+            <p>Не намерихме тест по въведения от Вас код. Моля проверете изписването на кода или потърсете теста чрез търсачката. </p>
+            <button type="submit" formmethod="dialog">OK</button>
+          </form>
+        </dialog>
+        <p>или</p>
+        <button type="button"><span class="fa fa-list"></span>Преглед на списъка</button>
+      </section>
+      <section class="activity">
+        <h2>Създаване на тест</h2>
+        <p>Впишете се, за да създадете тест</p>
+        <form id="sign-in" action="login.php" method="post">
+          <input type="email" name="email" value="" placeholder="Въведете имейл"/>
+          <input type="password" name="password" value="" placeholder="Въведете парола"/>
+          <button type="submit"><span class="fa fa-right-to-bracket"></span>Вписване</button>
+        </form>
+        <p>или</p>
+        <button type="button"><span class="fa fa-google"></span>Вписване с Google</button>
+      </section>
+    </main>
+    <footer>
+      <p>KnowledgeTest 2023&copy;</p>
+      <p>
+        <span>Даниел Халачев, </span>
+        <span>Стефан Велев</span>
+      </p>
+    </footer>
+  </body>
+</html>

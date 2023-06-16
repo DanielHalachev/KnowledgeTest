@@ -1,0 +1,11 @@
+CREATE TABLE users (
+  id INT NOT NULL AUTO_INCREMENT,
+  googleId VARCHAR(255) UNIQUE,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password VARBINARY(255) NOT NULL,
+  firstName VARCHAR(50) NOT NULL,
+  lastName VARCHAR(50) NOT NULL,
+  profilePicture VARCHAR(25) NULL,
+  PRIMARY KEY(id)
+);
+

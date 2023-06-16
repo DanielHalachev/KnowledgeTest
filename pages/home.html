@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="bg">
+  <head>
+    <title>Добре дошли</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="./../css/common.css" rel="stylesheet" type="text/css">
+    <link href="./../css/home.css" rel="stylesheet" type="text/css">
+    <script src="https://kit.fontawesome.com/5c9473fc67.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Retrieve token from the "token" cookie
+        const token = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("token="))
+          .split("=")[1];
+
+        // Fetch tests
+        fetch("../api/tests", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((tests) => {
+            const testsSection = document.querySelector("#latest-tests");
+
+            tests.forEach((test) => {
+              const testSection = document.createElement("section");
+              testSection.classList.add("test");
+
+              const testTitle = document.createElement("h3");
+              testTitle.textContent = test.title;
+
+              const testId = document.createElement("p");
+              testId.textContent = test.id;
+
+              const testQuestions = document.createElement("p");
+              testQuestions.textContent = `${test.questionsCount} въпроса`;
+
+              testSection.appendChild(testTitle);
+              testSection.appendChild(testId);
+              testSection.appendChild(testQuestions);
+              testsSection.appendChild(testSection);
+            });
+          })
+          .catch((error) => console.error("Error fetching tests:", error));
+
+        // Fetch questions
+        fetch("../api/questions", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((questions) => {
+            const questionsSection = document.querySelector("#latest-questions");
+
+            questions.forEach((question) => {
+              const questionSection = document.createElement("section");
+              questionSection.classList.add("test");
+
+              const questionTitle = document.createElement("h3");
+              questionTitle.textContent = question.label;
+
+              const questionId = document.createElement("p");
+              questionId.textContent = question.id;
+
+              questionSection.appendChild(questionTitle);
+              questionSection.appendChild(questionId);
+              questionsSection.appendChild(questionSection);
+            });
+          })
+          .catch((error) => console.error("Error fetching questions:", error));
+      });
+    </script>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <h1><a href="./home.html">KnowledgeTest</a></h1>
+        <ul>
+          <a href="./tests.html"><li><span class="fa fa-list-ol"></span>Тестове</li></a>
+          <a href="./questions.html"><li><span class="fa fa-question"></span>Въпроси</li></a>
+          <a href="./index.php"><li><span class="fa fa-power-off"></span>Изход</li></a>
+        </ul>
+      </nav>
+    </header>
+    <aside>
+      <section class="activity">
+        <h2>Профил</h2>
+        <img src="./../img/profile.png" alt=""/>
+        <p>FirstName</p>
+        <p>LastName</p>
+        <p>Email</p>
+        <button type="button"><span class="fa fa-power-off"></span>Изход</button>
+        <button type="button"><span class="fa fa-key"></span>Смяна на паролата</button>
+        <button type="button"><span class="fa fa-user-slash"></span>Изтриване на профила</button>
+      </section>
+    </aside>
+    <main>
+      <section class="activity" id="latest-tests">
+        <h2>Последни тестове</h2>
+      </section>
+      <section class="activity" id="latest-questions">
+        <h2>Последни въпроси</h2>
+      </section>
+    </main>
+    <footer>
+      <p>KnowledgeTest 2023&copy;</p>
+      <p>
+        <span>Даниел Халачев, </span>
+        <span>Стефан Велев</span>
+      </p>
+    </footer>
+  </body>
+</html>
