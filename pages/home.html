@@ -125,7 +125,7 @@
                 .then((response) => response.json())
                 .then((questions) => {
                   const testSection = document.createElement("section");
-                  testSection.classList.add("test");
+                  testSection.classList.add("item");
 
                   const testLink = document.createElement("a");
                   testLink.href = `testPreview.php?testId=${test.id}`;
@@ -175,7 +175,7 @@
                 .then((response) => response.json())
                 .then((test) => {
                   const questionSection = document.createElement("section");
-                  questionSection.classList.add("question");
+                  questionSection.classList.add("item");
 
                   const questionLink = document.createElement("a");
                   questionLink.href = `questions.html?questionId=${question.id}`;
