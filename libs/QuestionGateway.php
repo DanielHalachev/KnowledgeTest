@@ -64,10 +64,10 @@ class QuestionGateway {
             break;
           case $key === 'isMultipleChoice':
             $condition = "$key = :$key";
-            $value = (bool) $value;
+            $value = ($value === "true") ? true : false;
             break;
           default:
-            $condition = "$key = :$key";
+            $condition = "$key LIKE CONCAT('%', :$key, '%')";
             break;
         }
 

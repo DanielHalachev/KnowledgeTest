@@ -51,9 +51,12 @@ class AnswerGateway {
             $condition = "$key = :$key";
             $value = (int) $value;
             break;
+          case $key == 'label':
+            $condition = "$key LIKE CONCAT('%', :$key, '%')";
+            break;
           case $key === 'isCorrect':
             $condition = "$key = :$key";
-            $value = (bool) $value;
+            $value = ($value === "true") ? true : false;
             break;
           default:
             $condition = "$key = :$key";

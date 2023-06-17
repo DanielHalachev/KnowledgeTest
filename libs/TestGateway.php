@@ -37,7 +37,30 @@ class TestGateway {
       $conditions = [];
 
       foreach ($filters as $key => $value) {
-        $conditions[] = "$key = :$key";
+        $condition = '';
+
+        switch (true) {
+          case $key === 'id':
+            $condition = "$key = :$key";
+            $value = (int) $value;
+            break;
+          case $key === 'uploaderId':
+            $condition = "$key = :$key";
+            $value = (int) $value;
+            break;
+          case $key === 'author':
+            $condition = "$key LIKE CONCAT('%', :$key, '%')";
+            break;
+          case $key === 'topic':
+            $condition = "$key LIKE CONCAT('%', :$key, '%')";
+            break;
+          default:
+            $condition = "$key = :$key";
+            break;
+        }
+
+        $conditions[] = $condition;
+        $filters[$key] = $value;
       }
 
       $sql .= " " . implode(" AND ", $conditions);
