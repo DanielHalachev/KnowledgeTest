@@ -9,13 +9,75 @@
     <script src="https://kit.fontawesome.com/5c9473fc67.js" crossorigin="anonymous"></script>
     <script src="../js/logout.js" defer></script>
     <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // Retrieve token from the "token" cookie
-      const token = document.cookie
+    function openImageUploadDialog() {
+        document.getElementById('imageUpload').click();
+    }
+    function getToken() {
+      return document.cookie
           .split("; ")
           .find((row) => row.startsWith("token="))
           .split("=")[1];
-      // Fetch user data from the API using the bearer token
+    }
+    </script>
+    <script>
+    function handleImageUpload(event) {
+      fetch("../api/users", {
+        headers: {
+          Authorization: `Bearer ${getToken()}`
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          const file = event.target.files[0];
+          const userId = data[0].id;
+          console.log(file);
+          if (file && userId) {
+            const fileExtension = file.name.split('.').pop();
+            const newFileName = `${userId}.${fileExtension}`;
+            const formData = new FormData();
+            formData.append('profilePicture', file, newFileName);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "../img/uploadImage.php", true);
+            xhr.onreadystatechange = function() {
+              if (xhr.readyState === 4 && xhr.status === 200) {
+                console.log(xhr.responseText);
+                }
+            };
+            xhr.send(formData);
+
+            fetch("../api/users/"+userId, {
+              method: "PATCH",
+              headers: {
+                Authorization: `Bearer ${getToken()}`
+              }, 
+              body: JSON.stringify({profilePicture: "2.png"})
+            })
+              .then(response => {
+                if (response.ok) {
+                  console.log('Image uploaded');
+                  location.reload();
+                } else {
+                  console.error('Error uploading image');
+                }
+              })
+              .catch(error => {
+                console.error('Error uploading image:', error);
+              });
+          }
+          const imgSrc = data[0].profilePicture
+            ? `../img/${data[0].profilePicture}`
+            : "../img/profile.png";
+          document.getElementById("profilePicture").src = imgSrc;
+        })
+        .catch(error => {
+          console.error("Error fetching user data:", error);
+        });
+    }
+    </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const token = getToken();
       fetch("../api/users", {
         headers: {
           Authorization: `Bearer ${token}`
@@ -33,7 +95,7 @@
         document.getElementById("email").textContent = email;
 
         // Set the profile picture source
-        const imgSrc = profilePicture ? `../img/usr/${profilePicture}` : "../img/usr/profile.png";
+        const imgSrc = profilePicture ? `../img/${profilePicture}` : "../img/profile.png";
         document.getElementById("profilePicture").src = imgSrc;
       })
       .catch(error => {
@@ -163,10 +225,12 @@
     <aside>
       <section class="activity">
         <h2>Профил</h2>
-        <img id="profilePicture" src="./../img/usr/profile.png" alt="profile picture"/>
+        <img id="profilePicture" src="./../img/profile.png" alt="profile picture" onclick="openImageUploadDialog()" class="blur-image"/>
+        <!-- <span class="image-overlay">Промяна</span> -->
         <p id="firstName">FirstName</p>
         <p id="lastName">LastName</p>
         <p id="email">Email</p>
+        <input type="file" name="profilePicture" id="imageUpload" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
         <button type="button" onclick="logout()"><span class="fa fa-power-off"></span>Изход</button>
         <button type="button" onclick="window.location = './changePassword.php'"><span class="fa fa-key"></span>Смяна на паролата</button>
         <button type="button"><span class="fa fa-user-slash"></span>Изтриване на профила</button>
