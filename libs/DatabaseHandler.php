@@ -135,13 +135,14 @@ class DatabaseHandler {
     return (int) $connection->lastInsertId();
   }
 
-  public static function createTest(int $uploaderId, int $authorId, int $topicId = NULL) : int {
-    $sql = "INSERT INTO `tests` (uploaderId, authorId, topicId) VALUES (?, ?, ?)";
+  public static function createTest(int $uploaderId, string $author, string $topic = NULL) : int {
+    $sql = "INSERT INTO `tests` (uploaderId, author, topic) VALUES (?, ?, ?)";
     $connection = (new DatabaseConnection())->getConnection();
     $statement = $connection->prepare($sql);
+    var_dump($uploaderId);
     $statement->bindParam(1, $uploaderId);
-    $statement->bindParam(2, $authorId);
-    $statement->bindParam(3, $topicId);
+    $statement->bindParam(2, $author);
+    $statement->bindParam(3, $topic);
 
     $statement->execute();
 
@@ -208,36 +209,33 @@ class DatabaseHandler {
 
   public static function getTestId(int $uploaderId, string $facultyNumber, string $topicName = NULL) : int {
     if ($topicName !== null) {
-      $sql = "SELECT id FROM `tests` WHERE uploaderId = ? AND authorId = ? AND topicId = ?";
+      $sql = "SELECT id FROM `tests` WHERE uploaderId = ? AND author = ? AND topic = ?";
       $connection = (new DatabaseConnection())->getConnection();
       $statement = $connection->prepare($sql);
       $statement->bindParam(1, $uploaderId);
-      $authorId = self::getAuthorId($facultyNumber);
-      $statement->bindParam(2, $authorId);
-      $topicId = self::getTopicId($topicName);
-      $statement->bindParam(3, $topicId);
+      $statement->bindParam(2, $facultyNumber);
+      $statement->bindParam(3, $topicName);
       $resultOfQuery = $statement->execute();
 
       if ($resultOfQuery && $statement->rowCount() > 0) {
         return (int)$statement->fetchColumn();
       }
 
-      return self::createTest($uploaderId, $authorId, $topicId);
+      return self::createTest($uploaderId, $facultyNumber, $topicName);
     } else {
-      $sql = "SELECT id FROM `tests` WHERE uploaderId = ? AND authorId = ?";
+      $sql = "SELECT id FROM `tests` WHERE uploaderId = ? AND author = ?";
 
       $connection = (new DatabaseConnection())->getConnection();
       $statement = $connection->prepare($sql);
       $statement->bindParam(1, $uploaderId);
-      $authorId = self::getAuthorId($facultyNumber);
-      $statement->bindParam(2, $authorId);
+      $statement->bindParam(2, $facultyNumber);
       $resultOfQuery = $statement->execute();
 
       if ($resultOfQuery && $statement->rowCount() > 0) {
         return (int) $statement->fetchColumn();
       }
 
-      return self::createTest($uploaderId, $authorId, null);
+      return self::createTest($uploaderId, $facultyNumber, null);
     }
   }
 
