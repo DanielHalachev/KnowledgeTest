@@ -1,0 +1,63 @@
+/* Table */
+table.questions-table {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.questions-table th,
+.questions-table td {
+  padding: 10px;
+  text-align: left;
+}
+
+.questions-table th {
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.questions-table td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Answers Accordion Row */
+tr.answers-row {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.answers-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.answers-table th,
+.answers-table td {
+  padding: 5px;
+}
+
+.answers-table th {
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.answers-table td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for selected row */
+tr.selected-row {
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+/* Styling for hover effect */
+tr.question-row:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+

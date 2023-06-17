@@ -8,6 +8,7 @@
     <link href="./../css/home.css" rel="stylesheet" type="text/css">
     <script src="https://kit.fontawesome.com/5c9473fc67.js" crossorigin="anonymous"></script>
     <script src="../js/logout.js" defer></script>
+    <script src="../js/toggleNav.js"></script>
     <script>
     function openImageUploadDialog() {
         document.getElementById('imageUpload').click();
@@ -214,11 +215,12 @@
   <body>
     <header>
       <nav>
+        <span class="fa fa-bars" id="menu" onclick="toggleNav()"></span>
         <h1><a href="./home.html">KnowledgeTest</a></h1>
         <ul>
-          <a href="./tests.html"><li><span class="fa fa-list-ol"></span>Тестове</li></a>
+          <!-- <a href="./tests.html"><li><span class="fa fa-list-ol"></span>Тестове</li></a> -->
           <a href="./questions.html"><li><span class="fa fa-question"></span>Въпроси</li></a>
-          <a href="./index.php"><li><span class="fa fa-power-off"></span>Изход</li></a>
+          <a onclick="logout()"><li><span class="fa fa-power-off"></span>Изход</li></a>
         </ul>
       </nav>
     </header>

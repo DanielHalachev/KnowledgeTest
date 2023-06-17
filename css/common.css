@@ -1,12 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
-.fa {
-  margin-right: 1em;
-}
-
 h1, h2 {
   font-weight: bold;
   font-family: 'Pacifico', cursive;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
 }
 
 dialog {
@@ -47,9 +52,10 @@ nav {
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   align-content: center;
+  gap: 10px;
 }
 
 nav ul {
@@ -60,6 +66,7 @@ nav ul {
   align-content: space-around;
   gap: 10px;
   list-style: none;
+  margin-left: auto;
 }
 
 nav ul a {
@@ -76,6 +83,15 @@ nav ul a {
 
 nav ul a:hover {
   background-color: rgba(255, 255, 255, 0.7);
+}
+
+nav ul a li {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
 }
 
 
@@ -95,14 +111,21 @@ body {
 }
 
 header, footer {
-  height: 60px;
-  padding: 20px;
+  min-height: 60px;
+  gap: 20px;
   display: flex;
   flex-direction: row;
   align-items: center;
   align-content: center;
   background-color: rgba(255, 255, 255, 0.9);
+}
+
+header {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+footer {
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
 }
 
 nav {
@@ -127,6 +150,12 @@ nav ul a {
 
 nav ul a:hover {
   background-color: rgba(0, 0, 0, 0.1);
+}
+
+#menu {
+  font-size: 1.5em;
+  display: none;
+  cursor: pointer;
 }
 
 footer {
@@ -155,6 +184,11 @@ button[type="button"] {
   cursor: pointer;
   transition: background-color 0.3s ease;
   min-width: 200px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1em;
 }
 
 button[type="submit"]:hover,
