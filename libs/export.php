@@ -37,7 +37,7 @@ foreach ($questionsResult as $questionRow) {
     $questions[] = array(
         'question' => $questionRow['label'],
         'questiontype' => $questionRow['questionType'],
-        'answernumbering' => 'none',
+        'answernumbering' => 'ABCD',
         'answer' => $answers
     );
 }
@@ -50,6 +50,7 @@ foreach ($questions as $question) {
     $text = $name->addChild('text', htmlspecialchars($question['question']));
 
     $questiontext = $q->addChild('questiontext');
+    $questiontext->addAttribute('format', 'plain_text');
     $text = $questiontext->addChild('text', htmlspecialchars($question['question']));
 
 //    $q->addChild('qtype', $question['questiontype']);
@@ -58,6 +59,7 @@ foreach ($questions as $question) {
     foreach ($question['answer'] as $answer) {
         $a = $q->addChild('answer');
         $a->addAttribute('fraction', $answer['fraction']);
+        $a->addAttribute('format', 'plain_text');
         $text = $a->addChild('text', htmlspecialchars($answer['answer']));
 
         $feedback = $a->addChild('feedback');
