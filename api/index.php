@@ -21,8 +21,7 @@ $answerGateway = new AnswerGateway($databaseConnection);
 $questionGateway = new QuestionGateway($databaseConnection);
 $testGateway = new TestGateway($databaseConnection);
 $feedbackGateway = new FeedbackGateway($databaseConnection);
-$topicGateway = new TopicGateway($databaseConnection);
-$authorGateway = new AuthorGateway($databaseConnection);
+$questionTypeGateway = new QuestionTypeGateway($databaseConnection);
 $sessionGateway = new SessionGateway($databaseConnection);
 
 session_start();
@@ -45,6 +44,10 @@ switch (explode("?", $parts[3])[0]) {
     break;
   case "feedback":
     $controller = new FeedbackController($feedbackGateway);
+    $controller->processRequest($_SERVER["REQUEST_METHOD"], $_GET, $id);
+    break;
+  case "types":
+    $controller = new QuestionTypeController($questionTypeGateway);
     $controller->processRequest($_SERVER["REQUEST_METHOD"], $_GET, $id);
     break;
   case "session":
