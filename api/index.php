@@ -47,14 +47,6 @@ switch (explode("?", $parts[3])[0]) {
     $controller = new FeedbackController($feedbackGateway);
     $controller->processRequest($_SERVER["REQUEST_METHOD"], $_GET, $id);
     break;
-  case "topics":
-    $controller = new TopicController($topicGateway);
-    $controller->processRequest($_SERVER["REQUEST_METHOD"], $_GET, $id);
-    break;
-  case "authors":
-    $controller = new AuthorController($authorGateway);
-    $controller->processRequest($_SERVER["REQUEST_METHOD"], $_GET, $id);
-    break;
   case "session":
     $controller = new SessionController($sessionGateway);
     $controller->processRequest(

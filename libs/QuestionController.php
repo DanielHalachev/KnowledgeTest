@@ -134,7 +134,7 @@ class QuestionController extends ControllerBase {
       }
     }
     if (array_key_exists("isMultipleChoice", $data)) {
-      if (filter_var($data["isMultipleChoice"], FILTER_VALIDATE_BOOL) === false) {
+      if (filter_var($data["isMultipleChoice"], FILTER_VALIDATE_BOOL) === null) {
         $errors[] = "Invalid isMultipleChoice value";
       }
     }
