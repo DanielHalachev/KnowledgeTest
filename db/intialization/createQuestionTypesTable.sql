@@ -1,5 +1,5 @@
 CREATE TABLE questionTypes (
-  id INT NOT NULL,
+  id INT NOT NULL AUTO_INCREMENT,
   description VARCHAR(30),
   PRIMARY KEY(id)
 );
