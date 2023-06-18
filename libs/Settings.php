@@ -6,6 +6,10 @@ define('DB_HOST', 'localhost');
 define('DB_NAME', 'tests');
 define('DB_USER', 'root');
 define('DB_PASSWORD', '');
+
+// Default number of items in GET collection response
+define('DEFAULT_QUERY_SIZE', 10);
+
 // CSV Variables
 define('DELIMITER', ';');
 define('MAXIMUM_LINE_LENGTH', 10000);

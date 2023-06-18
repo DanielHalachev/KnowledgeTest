@@ -68,6 +68,11 @@ class TestController extends ControllerBase {
   }
 
   public function processCollectionRequest(string $method, $filters): void {
+    $page = $filters["page"] ?? 1;
+    $size = $filters["size"] ?? DEFAULT_QUERY_SIZE;
+    unset($filters["page"], $filters["size"]);
+    $offset = ($page - 1) * $size;
+
     $sort = $filters['sort'] ?? null;
     unset($filters['sort']);
     switch ($method) {
@@ -79,7 +84,7 @@ class TestController extends ControllerBase {
           }
           $filters["uploaderId"] = $this->payload["userId"];
         }
-        echo json_encode($this->gateway->getAll($filters, $sort));
+        echo json_encode($this->gateway->getAll($filters, $sort, $offset, $size));
         break;
       case "POST":
         $data = (array) json_decode(file_get_contents("php://input"), true);

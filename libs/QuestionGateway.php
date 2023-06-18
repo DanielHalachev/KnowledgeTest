@@ -27,7 +27,7 @@ class QuestionGateway {
     return $data;
   }
   
-  public function getAll(array $filters = [], string $sort = null): array {
+  public function getAll(array $filters = [], string $sort = null, $offset = 0, $limit = DEFAULT_QUERY_SIZE): array {
     $filters = array_filter(
       $filters, 
       function ($value, $key) {
@@ -90,11 +90,21 @@ class QuestionGateway {
       $sql .= " ORDER BY " . implode(", ", $orderBy);
     }
 
+    if ($limit !== -1){
+      $sql .= " LIMIT :limit";
+    }
+    $sql .= " OFFSET :offset";
+
     $statement = $this->connection->prepare($sql);
 
     foreach ($filters as $key => $value) {
       $statement->bindValue(":$key", $value, $this->getPDOType($value));
     }
+
+    if ($limit !== -1){
+      $statement->bindValue(':limit', $limit, PDO::PARAM_INT);
+    }
+    $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
 
     $statement->execute();
 

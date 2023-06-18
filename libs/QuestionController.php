@@ -68,6 +68,11 @@ class QuestionController extends ControllerBase {
   }
 
   public function processCollectionRequest(string $method, $filters): void {
+    $page = $filters["page"] ?? 1;
+    $size = $filters["size"] ?? DEFAULT_QUERY_SIZE;
+    unset($filters["page"], $filters["size"]);
+    $offset = ($page - 1) * $size;
+
     $sort = $filters['sort'] ?? null;
     unset($filters['sort']);
     switch ($method) {
@@ -79,7 +84,7 @@ class QuestionController extends ControllerBase {
           }
           $filters["uploaderId"] = $this->payload["userId"]; 
         }
-        echo json_encode($this->gateway->getAll($filters, $sort));
+        echo json_encode($this->gateway->getAll($filters, $sort, $offset, $size));
         break;
       case "POST":
         $data = (array) json_decode(file_get_contents("php://input"), true);
@@ -123,6 +128,11 @@ class QuestionController extends ControllerBase {
       }
     }
 
+    if (array_key_exists("id", $data)) {
+      if (filter_var($data["id"], FILTER_VALIDATE_INT) === false) {
+        $errors[] = "Invalid id";
+      }
+    }
     if (array_key_exists("testId", $data)) {
       if (filter_var($data["testId"], FILTER_VALIDATE_INT) === false) {
         $errors[] = "Invalid testId";
@@ -136,6 +146,16 @@ class QuestionController extends ControllerBase {
     if (array_key_exists("isMultipleChoice", $data)) {
       if (filter_var($data["isMultipleChoice"], FILTER_VALIDATE_BOOL) === null) {
         $errors[] = "Invalid isMultipleChoice value";
+      }
+    }
+    if (array_key_exists("page", $data)) {
+      if (filter_var($data["page"], FILTER_VALIDATE_INT) === false) {
+        $errors[] = "Invalid page value";
+      }
+    }
+    if (array_key_exists("size", $data)) {
+      if (filter_var($data["size"], FILTER_VALIDATE_INT) === false) {
+        $errors[] = "Invalid size value";
       }
     }
 
