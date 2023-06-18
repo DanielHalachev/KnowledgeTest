@@ -38,14 +38,16 @@
         body: JSON.stringify({author: document.getElementById("authorName").value.trim() || null, topic: document.getElementById("topicName").value.trim() || "Неименуван тест"})
       })
         .then((response) => response.json())
-        .then(() => {applyTestFilters();      fetchAndPopulateTests();
+        .then(() => {
+          applyTestFilters();      
+          fetchAndPopulateTests(getToken());
         })
         .catch((error) =>console.error("Error creating test:", error));
     }
     </script>
     <script>
     document.addEventListener("DOMContentLoaded", function() {
-      applyTestFilters();
+      applyTestFilters(getToken());
     });
     </script>
     <script>
@@ -57,6 +59,7 @@
       const searchFilter = sidebarTestSearch.value.trim();
       const queryParams = new URLSearchParams();
       if (searchFilter !== "") queryParams.set("topic", searchFilter);
+      queryParams.set("size", -1);
 
       fetch("../api/tests?"+queryParams.toString(), {
         headers: {
@@ -101,7 +104,7 @@
                   testsSection.appendChild(testSection);
                   testSection.addEventListener("click", function(){
                     document.getElementById("testSelect").value=testSection.dataset.id;
-                    applyFilters();
+                    applyFilters(getToken());
                   })
                 })
                 .catch((error) =>
@@ -148,11 +151,30 @@
     </aside>
     <main>
       <section class="activity" id="questions">
+        <div>
+          <span>
+            <span>Страница </span>
+            <input type="number" name="page" value="1" min="1" id="pageField" onchange="applyFilters(getToken())">
+            <span>. </span>
+          </span>
+          <span>
+            <span>Покажи </span>
+            <select id="sizeSelect" onchange="applyFilters(getToken())">
+              <option value="1">1</option>
+              <option value="5">5</option>
+              <option value="10" selected>10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="-1">Всички</option>
+            </select>
+          </span>
+        </div>
         <table class="questions-table">
           <thead>
             <tr>
               <th>
-                <input type="checkbox">
+                <input type="checkbox" onchange="selectAll()">
               </th>
               <th data-sort="label">Въпрос<span class="fa fa-sort sort-icon"></span></th>
               <th data-sort="testId">Тест<span class="fa fa-sort sort-icon"></span></th>
@@ -162,22 +184,22 @@
             </tr>
             <tr>
               <th>
-                <button onclick="applyFilters()"><span class="fa fa-search"></span></button>
+                <button onclick="applyFilters(getToken())"><span class="fa fa-search"></span></button>
               </th>
               <th>
-                <input type="search" id="labelSearchField">
+                <input type="search" id="labelSearchField"> 
               </th>
               <th>
-                <select id="testSelect"></select>
+                <select id="testSelect" onchange="applyFilters(getToken())"></select>
               </th>
               <th>
                 <input type="search" id="aimSearchField">
               </th>
               <th>
-                <select id="questionTypeSelect"></select>
+                <select id="questionTypeSelect" onchange="applyFilters(getToken())"></select>
               </th>
               <th>
-              <select id="isMultipleChoiceSelect"></select>
+              <select id="isMultipleChoiceSelect" onchange="applyFilters(getToken())"></select>
             </th>
             </tr>
           </thead>
