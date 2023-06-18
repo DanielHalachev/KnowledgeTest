@@ -84,6 +84,8 @@ function applyFilters(token) {
   const aimSearchField = document.querySelector("#aimSearchField");
   const questionTypeSelect = document.querySelector("#questionTypeSelect");
   const isMultipleChoiceSelect = document.querySelector("#isMultipleChoiceSelect");
+  const pageField = document.querySelector("#pageField");
+  const sizeSelect = document.querySelector("#sizeSelect");
   const questionsTable = document.querySelector("#questions .questions-table tbody");
   questionsTable.innerHTML = "";
 
@@ -92,6 +94,8 @@ function applyFilters(token) {
   const aimFilter = aimSearchField.value.trim();
   const questionTypeFilter = questionTypeSelect.value;
   const isMultipleChoiceFilter = isMultipleChoiceSelect.value;
+  const page = pageField.value;
+  const size = sizeSelect.value;
 
   const tableHeaders = document.querySelectorAll("th[data-sort]");
   const sortParams = [];
@@ -113,6 +117,8 @@ function applyFilters(token) {
   if (aimFilter !== "") queryParams.set("aim", aimFilter);
   if (questionTypeFilter !== "") queryParams.set("questionType", questionTypeFilter);
   if (isMultipleChoiceFilter !== "") queryParams.set("isMultipleChoice", isMultipleChoiceFilter);
+  queryParams.set("page", page);
+  queryParams.set("size", size);
   if (sortQuery !== "") queryParams.set("sort", sortQuery);
 
 
@@ -315,9 +321,19 @@ function populateIsMultipleChoiceSelect() {
   isMultipleChoiceSelect.appendChild(noOption);
 }
 
+function selectAll() {
+  const checkboxes = document.querySelectorAll("#questions tbody input[type='checkbox']");
+  const isSelected = document.querySelector("#questions thead input[type='checkbox']").checked;
+  checkboxes.forEach((checkbox) =>{
+    checkbox.checked = isSelected;
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function() {
   const tableHeaders = document.querySelectorAll("th[data-sort]");
   tableHeaders.forEach((th) => {
     th.addEventListener("click", handleSort);
   });
 });
+
+
