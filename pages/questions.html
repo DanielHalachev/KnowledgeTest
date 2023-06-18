@@ -11,6 +11,7 @@
     <script src="../js/logout.js" defer></script>
     <script src="../js/toggleNav.js"></script>
     <script src="../js/questionTable.js"></script>
+    <script src="../js/exportToMoodle.js"></script>
     <script>
     function getToken() {
       return document.cookie
@@ -97,10 +98,14 @@
                   const testQuestions = document.createElement("p");
                   testQuestions.textContent = `Въпроси: ${questions.length}`;
 
+                  const exportToMoodle = document.createElement("p");
+                  exportToMoodle.innerHTML = `<button onclick="exportToMoodleXML('${test.id}', '${test.topic}')">Експорт към Moodle XML формат<span class="fa fa-file-export"></span></button>`;
+
                   testLink.appendChild(testTitle);
                   testSection.appendChild(testLink);
                   testSection.appendChild(testAuthor);
                   testSection.appendChild(testQuestions);
+                  testSection.appendChild(exportToMoodle);
                   testsSection.appendChild(testSection);
                   testSection.addEventListener("click", function(){
                     document.getElementById("testSelect").value=testSection.dataset.id;
