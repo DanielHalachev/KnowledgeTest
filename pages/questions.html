@@ -116,6 +116,30 @@
         .catch((error) => console.error("Error fetching tests:", error));
     }
     </script>
+    <script>
+      function readCSV() {
+        var fileInput = document.getElementById('csvFile');
+        var file = fileInput.files[0];
+        var formData = new FormData();
+        formData.append('csvFile', file);
+        console.log("I'm here");
+        var authToken = getToken();
+        fetch('./../libs/readCSV.php', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + authToken
+          },
+          body: formData
+        })
+                .then(response => response.text())
+                .then(result => {
+                  location.reload();
+                })
+                .catch(error => {
+                  console.error("Error reading from csv file:", error);
+                });
+      }
+    </script>
   </head>
   <body>
     <header>
@@ -132,7 +156,14 @@
     <aside>
       <section class="activity">
         <h2>Тестове</h2>
-        <button type="button"><span class="fa fa-upload"></span>Качване</button>
+        <button type="button" onclick="document.getElementById('uploadCSVDialog').showModal()"><span class="fa fa-upload"></span>Качване</button>
+        <dialog id="uploadCSVDialog">
+          <form id="uploadForm">
+            <input type="file" name="topic" id="csvFile" accept=".csv">
+            <button type="submit" formmethod="dialog">Отказ</button>
+            <button type="submit" id="importButton" onclick="readCSV()" formmethod="dialog">Импортиране</button>
+          </form>
+        </dialog>
         <button type="button" onclick="document.getElementById('createTestDialog').showModal()"><span class="fa fa-plus"></span>Нов тест</button>
         <dialog id="createTestDialog">
           <form>
