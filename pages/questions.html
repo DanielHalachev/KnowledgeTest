@@ -122,7 +122,6 @@
         var file = fileInput.files[0];
         var formData = new FormData();
         formData.append('csvFile', file);
-        console.log("I'm here");
         var authToken = getToken();
         fetch('./../libs/readCSV.php', {
           method: 'POST',
