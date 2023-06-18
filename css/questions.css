@@ -11,17 +11,26 @@ table.questions-table {
 .questions-table th,
 .questions-table td {
   padding: 10px;
-  text-align: left;
+  text-align: center;
 }
+
+/* .questions-table th input, .questions-table th select { */
+/*   width: 100%; */
+/* } */
 
 .questions-table th {
   font-weight: bold;
   background-color: rgba(0, 0, 0, 0.1);
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
 
 .questions-table td {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.questions-table td:nth-child(4) {
+  text-align: left;
 }
 
 /* Answers Accordion Row */
@@ -50,6 +59,10 @@ tr.answers-row {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+.answers-table td:nth-child(2) {
+  text-align: left;
+}
+
 /* Styling for selected row */
 tr.selected-row {
   background-color: rgba(0, 123, 255, 0.1);
@@ -61,3 +74,20 @@ tr.question-row:hover {
   cursor: pointer;
 }
 
+.sort-icon {
+  margin: auto 0.5em;
+  cursor: default;
+}
+
+@media (max-width: 768px) {
+  .questions-table tr {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (min-width:768px) and (max-width: 1200px) {
+  .questions-table th:nth-child(6), .questions-table td:nth-child(6){
+    display: none;
+  }
+}
