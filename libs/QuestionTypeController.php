@@ -49,11 +49,17 @@ class QuestionTypeController extends ControllerBase {
 
     switch ($method) {
       case "GET":
+        $errors = $this->getValidationErrors($filters, false);
+        if (!empty($errors)) {
+          http_response_code(422);
+          echo json_encode(["errors" => $errors]);
+          break;
+        }
         echo json_encode($this->gateway->getAll($filters, $sort));
         break;
       case "POST":
         $data = (array) json_decode(file_get_contents("php://input"), true);
-        $errors = $this->getValidationErrors($data);
+        $errors = $this->getValidationErrors($data, true);
         if (!empty($errors)) {
           http_response_code(422);
           echo json_encode(["errors" => $errors]);
@@ -67,11 +73,17 @@ class QuestionTypeController extends ControllerBase {
     }
   }
 
-  private function getValidationErrors(array $data): array {
+  private function getValidationErrors(array $data, bool $isNew = true): array {
     $errors = [];
-
-    if (empty($data["description"])) {
-      $errors[] = "Description is required";
+    if ($isNew){
+      if (empty($data["description"])) {
+        $errors[] = "Description is required";
+      }
+    }
+    if (array_key_exists("id", $data)) {
+      if (filter_var($data["id"], FILTER_VALIDATE_INT) === false) {
+        $errors[] = "Invalid id";
+      }
     }
 
     return $errors;

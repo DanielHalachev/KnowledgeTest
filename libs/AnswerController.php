@@ -78,6 +78,12 @@ class AnswerController extends ControllerBase {
           }
           $filters["uploaderId"] = $this->payload["userId"]; 
         }
+        $errors = $this->getValidationErrors($filters, false);
+        if (!empty($errors)) {
+          http_response_code(422);
+          echo json_encode(["errors" => $errors]);
+          break;
+        }
         echo json_encode($this->gateway->getAll($filters, $sort));
         break;
       case "POST":
@@ -116,6 +122,11 @@ class AnswerController extends ControllerBase {
       }
       if (!isset($data["isCorrect"])) {
         $errors[] = "IsCorrect field is required";
+      }
+    }
+    if(array_key_exists("id", $data)) {
+      if (filter_var($data["id"], FILTER_VALIDATE_INT) === false) {
+        $errors[] = "Invalid id";
       }
     }
     if(array_key_exists("questionId", $data)) {

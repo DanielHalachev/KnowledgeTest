@@ -77,6 +77,12 @@ class QuestionController extends ControllerBase {
     unset($filters['sort']);
     switch ($method) {
       case "GET":
+        $errors = $this->getValidationErrors($filters, false);
+        if (!empty($errors)) {
+          http_response_code(422);
+          echo json_encode(["errors" => $errors]);
+          break;
+        }
         if ($this->token) {
           $this->payload = JWT::decode($this->token, getenv("SECRET_KEY"));
           if(!$this->verifyPayload($this->payload)) {

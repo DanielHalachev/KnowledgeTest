@@ -84,6 +84,12 @@ class TestController extends ControllerBase {
           }
           $filters["uploaderId"] = $this->payload["userId"];
         }
+        $errors = $this->getValidationErrors($filters, false);
+        if (!empty($errors)) {
+          http_response_code(422);
+          echo json_encode(["errors" => $errors]);
+          break;
+        }
         echo json_encode($this->gateway->getAll($filters, $sort, $offset, $size));
         break;
       case "POST":
@@ -119,6 +125,11 @@ class TestController extends ControllerBase {
       }
     }
 
+    if (array_key_exists("id", $data)) {
+      if (filter_var($data["id"], FILTER_VALIDATE_INT) === false) {
+        $errors[] = "Invalid id";
+      }
+    }
     if (array_key_exists("uploaderId", $data)) {
       if (filter_var($data["uploaderId"], FILTER_VALIDATE_INT) === false) {
         $errors[] = "Invalid uploaderId";
