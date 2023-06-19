@@ -1,0 +1,40 @@
+aside #questionSection {
+  align-items: flex-start;
+}
+
+main section.activity article.feedback {
+  display:grid;
+  grid-template-rows: auto auto auto;
+  grid-template-columns: 3fr 1fr;
+  grid-template-areas: "textarea difficulty" "textarea slider" "textarea button";
+  gap: 10px;
+  width: 100%;
+  border: 1px solid #007bff;
+  border-radius: 20px;
+  padding: 30px;
+}
+
+.feedback p {
+  grid-area: textarea;
+  width: 100%;
+  text-align: center;
+  display: block;
+  border-left: 3px solid #007bff;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.feedback span {
+  grid-area: difficulty;
+}
+
+.feedback range {
+  grid-area: slider;
+}
+
+.feedback button {
+  grid-area: button;
+}
