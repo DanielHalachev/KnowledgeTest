@@ -1,10 +1,14 @@
 // Helper function to create an answer row
-function createAnswerRow(answer) {
+function createAnswerRow(answer, isMultipleChoice) {
   const answerRow = document.createElement("tr");
 
   const checkboxCell = document.createElement("td");
   const checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
+  if(isMultipleChoice){
+    checkbox.type = "checkbox";
+  } else {
+    checkbox.type="radio";
+  }
   checkbox.checked = answer.isCorrect;
   checkbox.disabled = true;
   checkboxCell.appendChild(checkbox);
@@ -49,7 +53,7 @@ function createAnswersAccordionRow(questionId) {
 }
 
 // Helper function to fetch and populate answers for a specific question
-function fetchAndPopulateAnswers(questionId, token) {
+function fetchAndPopulateAnswers(questionId, isMultipleChoice, token) {
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
   return fetch(`../api/answers?questionId=${questionId}`, { headers })
     .then((response) => response.json())
@@ -58,7 +62,7 @@ function fetchAndPopulateAnswers(questionId, token) {
       answersTable.innerHTML = ""; // Clear existing rows
 
       answers.forEach((answer) => {
-        const answerRow = createAnswerRow(answer);
+        const answerRow = createAnswerRow(answer, isMultipleChoice);
         answersTable.appendChild(answerRow);
       });
     })
@@ -140,6 +144,8 @@ function applyFilters(token) {
           const selectCell = document.createElement("td");
           const selectCheckbox = document.createElement("input");
           selectCheckbox.type = "checkbox";
+          selectCheckbox.classList.add("single-select");
+          selectCheckbox.setAttribute("data-questionId", question.id);
           selectCell.appendChild(selectCheckbox);
           questionRow.appendChild(selectCell);
 
@@ -159,9 +165,21 @@ function applyFilters(token) {
           questionTypeCell.textContent = ""; // Will be populated later
           questionRow.appendChild(questionTypeCell);
 
-          const isMultipleChoiceCell = document.createElement("td");
-          isMultipleChoiceCell.textContent = question.isMultipleChoice ? "Да" : "Не";
-          questionRow.appendChild(isMultipleChoiceCell);
+          // const isMultipleChoiceCell = document.createElement("td");
+          // isMultipleChoiceCell.textContent = question.isMultipleChoice ? "Да" : "Не";
+          // questionRow.appendChild(isMultipleChoiceCell);
+
+          const feedbackCell = document.createElement("td");
+          const feedbackButton = document.createElement("button");
+          if (token) {
+            feedbackButton.setAttribute('onclick', 'location.href="./viewFeedback.html?questionId='+question.id+'"');
+            feedbackButton.innerHTML = '<span class="fa fa-comments"></span>';
+          } else {
+            feedbackButton.setAttribute('onclick', 'location.href="./provideFeedback.html?questionId='+question.id+'"');
+            feedbackButton.innerHTML = '<span class="fa fa-comment-dots"></span>';
+          }
+          feedbackCell.appendChild(feedbackButton);
+          questionRow.appendChild(feedbackCell);
 
           // Attach click event listener to show/hide answers
           questionRow.addEventListener("click", () => {
@@ -169,8 +187,8 @@ function applyFilters(token) {
 
             // Exclude checkbox from toggling visibility
             if (
-              targetElement.tagName.toLowerCase() === "input" &&
-                targetElement.type === "checkbox"
+              targetElement.tagName.toLowerCase() == "button" || 
+                (targetElement.tagName.toLowerCase() === "input" && targetElement.type === "checkbox")
             ) {
               return;
             }
@@ -179,7 +197,7 @@ function applyFilters(token) {
 
             // Fetch answers only when opening the row for the first time
             if (answersRow.style.display === "table-row" && !answersRow.dataset.fetched) {
-              fetchAndPopulateAnswers(question.id, token)
+              fetchAndPopulateAnswers(question.id, question.isMultipleChoice, token)
                 .then(() => {
                   answersRow.dataset.fetched = true;
                 })
@@ -249,24 +267,32 @@ function handleSort(event) {
 // Function to fetch tests and populate the test select field
 function fetchAndPopulateTests(token) {
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
-  const testSelect = document.getElementById("testSelect");
-  testSelect.innerHTML = "";
+  const testSelects = document.querySelectorAll(".tSelect");
+  testSelects.forEach((element) => {
+    element.innerHTML = "";
+  });
 
   fetch("../api/tests", { headers })
     .then((response) => response.json())
     .then((tests) => {
-      // Add blank option
-      const blankOption = document.createElement("option");
-      blankOption.value = "";
-      blankOption.textContent = "Всички";
-      testSelect.appendChild(blankOption);
+      testSelects.forEach((element) => {
+        const blankOption = document.createElement("option");
+        blankOption.value = "";
+        if(element.id === "testSelect"){
+          blankOption.textContent = "Всички";
+        } else {
+          blankOption.textContent = "Изберете тест";
+        }
+        element.appendChild(blankOption);
+      });
 
-      // Populate with test options
       tests.forEach((test) => {
-        const option = document.createElement("option");
-        option.value = test.id;
-        option.textContent = test.topic;
-        testSelect.appendChild(option);
+        testSelects.forEach((element) => {
+          const option = document.createElement("option");
+          option.value = test.id;
+          option.textContent = test.topic;
+          element.appendChild(option);
+        });
       });
     })
     .catch((error) => console.error("Error fetching tests:", error));
@@ -274,24 +300,32 @@ function fetchAndPopulateTests(token) {
 
 // Function to fetch question types and populate the question type select field
 function fetchAndPopulateQuestionTypes() {
-  const questionTypeSelect = document.getElementById("questionTypeSelect");
-  questionTypeSelect.innerHTML="";
+  const questionTypeSelects = document.querySelectorAll(".qtSelect");
+  questionTypeSelects.forEach((element) => {
+    element.innerHTML="";
+  });
 
   fetch("../api/types")
     .then((response) => response.json())
     .then((types) => {
-      // Add blank option
-      const blankOption = document.createElement("option");
-      blankOption.value = "";
-      blankOption.textContent = "Всички";
-      questionTypeSelect.appendChild(blankOption);
+      questionTypeSelects.forEach((element) => {
+        const blankOption = document.createElement("option");
+        blankOption.value = "";
+        if (element.id === "questionTypeSelect") {
+          blankOption.textContent = "Всички";
+        } else {
+          blankOption.textContent = "Изберете тип";
+        }
+        element.appendChild(blankOption);
+      });
 
-      // Populate with question type options
       types.forEach((type) => {
-        const option = document.createElement("option");
-        option.value = type.id;
-        option.textContent = type.description;
-        questionTypeSelect.appendChild(option);
+        questionTypeSelects.forEach(element => {
+          const option = document.createElement("option");
+          option.value = type.id;
+          option.textContent = type.description;
+          element.appendChild(option);
+        });
       });
     })
     .catch((error) => console.error("Error fetching question types:", error));

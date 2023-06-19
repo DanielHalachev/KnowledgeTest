@@ -87,7 +87,8 @@
               <th data-sort="testId">Тест<span class="fa fa-sort sort-icon"></span></th>
               <th data-sort="aim">Цел<span class="fa fa-sort sort-icon"></span></th>
               <th data-sort="questionType">Тип<span class="fa fa-sort sort-icon"></span></th>
-              <th data-sort="isMultipleChoice">С множествен отговор<span class="fa fa-sort sort-icon"></span></th>
+              <!-- <th data-sort="isMultipleChoice">С множествен отговор<span class="fa fa-sort sort-icon"></span></th> -->
+              <th>Обратна връзка</th>
             </tr>
             <tr>
               <th>
@@ -97,13 +98,13 @@
                 <input type="search" id="labelSearchField" onchange="applyFilters()">
               </th>
               <th>
-                <select id="testSelect" onchange="applyFilters()"></select>
+                <select id="testSelect" class="testSelect" onchange="applyFilters()"></select>
               </th>
               <th>
                 <input type="search" id="aimSearchField" onchange="applyFilters()">
               </th>
               <th>
-                <select id="questionTypeSelect" onchange="applyFilters()"></select>
+                <select id="questionTypeSelect" class="questionTypeSelect" onchange="applyFilters()"></select>
               </th>
               <th>
               <select id="isMultipleChoiceSelect" onchange="applyFilters()"></select>

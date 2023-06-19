@@ -91,3 +91,40 @@ tr.question-row:hover {
     display: none;
   }
 }
+
+section.item p.actions {
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25em;
+  margin-top: 0.25em;
+}
+
+#isMultipleChoiceSelect {
+  display: none;
+}
+
+#tableSetup {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  /* align-items: flex-start; */
+  gap: 10px;
+  width: 100%;
+}
+
+#actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start; 
+  width: 100%;
+  gap: 10px;
+}
+
+#actions button {
+  margin: 0;
+}

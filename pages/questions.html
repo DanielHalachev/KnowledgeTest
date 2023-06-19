@@ -21,6 +21,92 @@
     }
     </script>
     <script>
+    function getCheckedIds(){
+      var checkboxes = document.querySelectorAll('.questions-table input[type="checkbox"].single-select');
+      var checkedQuestionIds = [];
+      checkboxes.forEach((element) => {
+        if(element.checked) {
+          checkedQuestionIds.push(element.dataset.questionid);
+        }
+      });
+      return checkedQuestionIds;
+    }
+    function moveQuestions(idList) {
+      var selectValue = document.querySelector("#actions .tSelect").value;
+      if (selectValue !== "") {
+        idList.forEach(function(id) {
+          var url = '../api/questions/' + parseInt(id);
+          fetch(url, {
+            method: 'PATCH',
+            headers: {
+              Authorization: `Bearer ${getToken()}`
+            }, 
+            body: JSON.stringify({ testId: selectValue })
+          })
+            .then(function(response) {
+              if (response.ok) {
+                location.reload();
+              } else {
+                console.error('Failed to move question ' + id + '.');
+              }
+            })
+            .catch(function(error) {
+              console.error('An error occurred while moving question ' + id + ':', error);
+            });
+        });
+      }
+    }
+
+    function changeQuestionTypes (idList) {
+      var selectValue = document.querySelector("#actions .qtSelect").value;
+      if (selectValue !== "") {
+        idList.forEach(function(id) {
+          var url = '../api/questions/' + parseInt(id);
+          fetch(url, {
+            method: 'PATCH',
+            headers: {
+              Authorization: `Bearer ${getToken()}`
+            }, 
+            body: JSON.stringify({ questionType: selectValue })
+          })
+            .then(function(response) {
+              if (response.ok) {
+                location.reload();
+                console.log('Question ' + id + ' moved successfully.');
+              } else {
+                console.error('Failed to change question type' + id + '.');
+              }
+            })
+            .catch(function(error) {
+              console.error('An error occurred while changing question type' + id + ':', error);
+            });
+        });
+      }
+    }
+
+    function deleteQuestions (idList) {
+      idList.forEach(function(id) {
+        var url = '../api/questions/' + parseInt(id);
+        fetch(url, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${getToken()}`
+          } 
+        })
+          .then(function(response) {
+            if (response.ok) {
+              location.reload();
+            } else {
+              console.error('Failed to delete question ' + id + '.');
+            }
+          })
+          .catch(function(error) {
+            console.error('An error occurred while deleting question ' + id + ':', error);
+          });
+      });
+    }
+    </script>
+    <script>
     document.addEventListener("DOMContentLoaded", function() {
       fetchAndPopulateTests(getToken());
       fetchAndPopulateQuestionTypes();
@@ -50,6 +136,78 @@
     document.addEventListener("DOMContentLoaded", function() {
       applyTestFilters(getToken());
     });
+    </script>
+    <script>
+    function deleteTest(id) {
+      const parent = event.target.parentNode.parentNode;
+      dialog = parent.querySelector("dialog");
+      if (!dialog) {
+        dialog = document.createElement("dialog");
+        const form = document.createElement("form");
+        const text = document.createElement("p");
+        text.innerHTML = "Сигурни ли сте, че искате да изтриете този тест и всички въпроси в него?";
+        const cancelButton = document.createElement("button");
+        cancelButton.innerHTML = "Отказ";
+        cancelButton.type = "submit";
+        cancelButton.setAttribute("formmethod", "dialog");
+        const confirmButton = document.createElement("button");
+        confirmButton.innerHTML = "Изтриване";
+        confirmButton.type = "submit";
+        confirmButton.setAttribute("formmethod", "dialog");
+        confirmButton.addEventListener("click", function() {
+          const token = getToken(); // Get the authorization token
+          fetch(`../api/questions?testId=${id}`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
+            .then(response => response.json())
+            .then(data => {
+              // Iterate over the questions and delete each one
+              const deletePromises = data.map(question => {
+                return fetch(`../api/questions/${question.id}`, {
+                  method: "DELETE",
+                  headers: {
+                    Authorization: `Bearer ${token}`
+                  }
+                });
+              });
+
+              // Wait for all question deletions to complete
+              Promise.all(deletePromises)
+                .then(() => {
+                  // Delete the test itself
+                  fetch(`../api/tests/${id}`, {
+                    method: "DELETE",
+                    headers: {
+                      Authorization: `Bearer ${token}`
+                    }
+                  })
+                    .then(() => {
+                      console.log("Test deleted successfully");
+                      location.reload();
+                    })
+                    .catch(error => {
+                      console.log("Error deleting the test:", error);
+                    });
+                })
+                .catch(error => {
+                  console.log("Error deleting questions:", error);
+                });
+            })
+            .catch(error => {
+              console.log("Error fetching questions:", error);
+            });
+        });
+        form.appendChild(text);
+        form.appendChild(cancelButton);
+        form.appendChild(confirmButton);
+        dialog.appendChild(form);
+        parent.appendChild(dialog);
+      }
+      dialog.showModal();
+    }
     </script>
     <script>
     function applyTestFilters() {
@@ -98,18 +256,23 @@
                   const testQuestions = document.createElement("p");
                   testQuestions.textContent = `Въпроси: ${questions.length}`;
 
-                  const exportToMoodle = document.createElement("p");
-                  exportToMoodle.innerHTML = `<button onclick="exportToMoodleXML('${test.id}', '${test.topic}')">Експорт към Moodle XML формат<span class="fa fa-file-export"></span></button>`;
+                  const actions = document.createElement("p");
+                  actions.classList.add("actions");
+                  actions.innerHTML = `<button onclick="exportToMoodleXML('${test.id}', '${test.topic}')"><span class="fa fa-file-export"></span>Експорт</button><button onclick="deleteTest('${test.id}')"><span class="fa fa-trash"></span>Изтриване</button>`;
 
                   testLink.appendChild(testTitle);
                   testSection.appendChild(testLink);
                   testSection.appendChild(testAuthor);
                   testSection.appendChild(testQuestions);
-                  testSection.appendChild(exportToMoodle);
+                  testSection.appendChild(actions);
                   testsSection.appendChild(testSection);
                   testSection.addEventListener("click", function(){
-                    document.getElementById("testSelect").value=testSection.dataset.id;
-                    applyFilters(getToken());
+                    if (event.target.tagName.toLowerCase() === "button") {
+                      return;
+                    } else {
+                      document.getElementById("testSelect").value=testSection.dataset.id;
+                      applyFilters(getToken());
+                    }
                   })
                 })
                 .catch((error) =>
@@ -186,13 +349,22 @@
     </aside>
     <main>
       <section class="activity" id="questions">
-        <div>
-          <span>
+        <div id="tableSetup">
+          <div id="actions">
+            <span>Преместване: 
+              <select class="tSelect" onchange="moveQuestions(getCheckedIds())"></select>
+            </span>
+            <span>Промяна на тип:
+              <select class="qtSelect" onchange="changeQuestionTypes(getCheckedIds())"></select>
+            </span>
+            <button onclick="deleteQuestions(getCheckedIds())"><span class="fa fa-trash"></span></button>
+          </div>
+          <span class="pageSetup">
             <span>Страница </span>
             <input type="number" name="page" value="1" min="1" id="pageField" onchange="applyFilters(getToken())">
             <span>. </span>
           </span>
-          <span>
+          <span class="pageSetup">
             <span>Покажи </span>
             <select id="sizeSelect" onchange="applyFilters(getToken())">
               <option value="1">1</option>
@@ -215,7 +387,8 @@
               <th data-sort="testId">Тест<span class="fa fa-sort sort-icon"></span></th>
               <th data-sort="aim">Цел<span class="fa fa-sort sort-icon"></span></th>
               <th data-sort="questionType">Тип<span class="fa fa-sort sort-icon"></span></th>
-              <th data-sort="isMultipleChoice">С множествен отговор<span class="fa fa-sort sort-icon"></span></th>
+              <!-- <th data-sort="isMultipleChoice">С множествен отговор<span class="fa fa-sort sort-icon"></span></th> -->
+              <th>Обратна връзка</th>
             </tr>
             <tr>
               <th>
@@ -225,13 +398,13 @@
                 <input type="search" id="labelSearchField"> 
               </th>
               <th>
-                <select id="testSelect" onchange="applyFilters(getToken())"></select>
+                <select id="testSelect" class="tSelect" onchange="applyFilters(getToken())"></select>
               </th>
               <th>
                 <input type="search" id="aimSearchField">
               </th>
               <th>
-                <select id="questionTypeSelect" onchange="applyFilters(getToken())"></select>
+                <select id="questionTypeSelect" class="qtSelect" onchange="applyFilters(getToken())"></select>
               </th>
               <th>
               <select id="isMultipleChoiceSelect" onchange="applyFilters(getToken())"></select>
