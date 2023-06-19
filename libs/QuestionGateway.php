@@ -160,6 +160,16 @@ class QuestionGateway {
   }
   
   public function delete(int $id): int {
+    $preparationSql1 = "DELETE FROM `answers` WHERE questionId = :questionId";
+    $preparationStatement1 = $this->connection->prepare($preparationSql1);
+    $preparationStatement1->bindValue(":questionId", $id, PDO::PARAM_INT);
+    $preparationStatement1->execute();
+
+    $preparationSql2 = "DELETE FROM `feedbacks` WHERE questionId = :questionId";
+    $preparationStatement2 = $this->connection->prepare($preparationSql2);
+    $preparationStatement2->bindValue(":questionId", $id, PDO::PARAM_INT);
+    $preparationStatement2->execute();
+
     $sql = "DELETE FROM `questions` WHERE id = :id";
     $statement = $this->connection->prepare($sql);
     $statement->bindValue(":id", $id, PDO::PARAM_INT);
