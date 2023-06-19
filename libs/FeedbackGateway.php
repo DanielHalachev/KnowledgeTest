@@ -2,6 +2,12 @@
 class FeedbackGateway {
   
   private $connection;
+  private array $validFields = [
+    'id',
+    'questionId',
+    'complexity',
+    'feedback'
+  ];
   
   public function __construct(DatabaseConnection $databaseConnection) {
     $this->connection = $databaseConnection->getConnection();
@@ -12,14 +18,94 @@ class FeedbackGateway {
     $statement = $this->connection->prepare($sql);
     $statement->bindParam(1, $id, PDO::PARAM_INT);
     $statement->execute();
-    return $statement->fetch();
+    $data = $statement->fetch();
+    return $data;
   }
   
-  public function getAll(): array {
+  public function getAll(array $filters = [], string $sort = null, $offset = 0, $limit = DEFAULT_QUERY_SIZE): array {
+    $filters = array_filter(
+      $filters, 
+      function ($value, $key) {
+        return isset($value) && $value !== '' && in_array($key, $this->validFields);
+      }, 
+      ARRAY_FILTER_USE_BOTH
+    );
+
     $sql = "SELECT * FROM `feedbacks`";
+
+    if (!empty($filters)) {
+      $sql .= " WHERE";
+      $conditions = [];
+
+      foreach ($filters as $key => $value) {
+        $condition = '';
+
+        switch ($key) {
+          case 'id':
+          case 'questionId':
+          case 'complexity':
+            $condition = "$key = :$key";
+            $value = (int) $value;
+            break;
+          default:
+            $condition = "$key LIKE CONCAT('%', :$key, '%')";
+            break;
+        }
+
+        $conditions[] = $condition;
+        $filters[$key] = $value;
+      }
+
+      $sql .= " " . implode(" AND ", $conditions);
+    }
+
+    if ($sort) {
+      $sortCriteria = $this->parseSortCriteria($sort);
+    }
+
+    if (!empty($sortCriteria)) {
+      $orderBy = [];
+      foreach ($sortCriteria as $field => $direction) {
+        $orderBy[] = "$field $direction";
+      }
+      $sql .= " ORDER BY " . implode(", ", $orderBy);
+    }
+
+    if ($limit !== -1){
+      $sql .= " LIMIT :limit";
+    }
+    $sql .= " OFFSET :offset";
+
     $statement = $this->connection->prepare($sql);
+
+    foreach ($filters as $key => $value) {
+      $statement->bindValue(":$key", $value, $this->getPDOType($value));
+    }
+
+    if ($limit !== -1){
+      $statement->bindValue(':limit', $limit, PDO::PARAM_INT);
+    }
+    $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
+
     $statement->execute();
-    return $statement->fetchAll();
+
+    $data = [];
+
+    while ($row = $statement->fetch()) {
+      $data[] = $row;
+    }
+
+    return $data;
+  }
+
+  private function getPDOType($value): int {
+    if (is_int($value)) {
+      return PDO::PARAM_INT;
+    } elseif (is_bool($value)) {
+      return PDO::PARAM_BOOL;
+    } else {
+      return PDO::PARAM_STR;
+    }
   }
 
   public function create(array $data): int {
@@ -32,7 +118,7 @@ class FeedbackGateway {
     return $this->connection->lastInsertId();
   }
 
-  public function update(array $current, array $new):int {
+  public function update(array $current, array $new): int {
     $sql = "UPDATE `feedbacks` SET questionId = :questionId, complexity = :complexity, feedback = :feedback WHERE id = :id";
     $statement = $this->connection->prepare($sql);
     $statement->bindValue(":questionId", $new["questionId"] ?? $current["questionId"], PDO::PARAM_INT);
@@ -49,6 +135,28 @@ class FeedbackGateway {
     $statement->bindValue(":id", $id, PDO::PARAM_INT);
     $statement->execute();
     return $statement->rowCount();
+  }
+
+  private function parseSortCriteria(?string $sort): array {
+    $sortCriteria = [];
+
+    if ($sort) {
+      $fields = explode(',', $sort);
+
+      foreach ($fields as $field) {
+        $parts = explode(' ', trim($field));
+        $fieldName = $parts[0] ?? '';
+        $direction = strtoupper($parts[1] ?? '');
+
+        if (
+          $fieldName 
+          && in_array($fieldName, $this->validFields) 
+          && $direction && ($direction === 'ASC' || $direction === 'DESC')) {
+            $sortCriteria[$fieldName] = $direction;
+        }
+      }
+    }
+    return $sortCriteria; 
   }
 }
 ?>

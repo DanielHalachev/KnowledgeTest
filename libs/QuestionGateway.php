@@ -23,7 +23,9 @@ class QuestionGateway {
     $statement->bindParam(1, $id, PDO::PARAM_INT);
     $statement->execute();
     $data = $statement->fetch();
-    $data["isMultipleChoice"] = (bool) $data["isMultipleChoice"];
+    if (isset($data["isMultipleChoice"])) {
+      $data["isMultipleChoice"] = (bool) $data["isMultipleChoice"];
+    }
     return $data;
   }
   
