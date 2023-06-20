@@ -2,7 +2,7 @@ function redirectToPreview(event) {
   event.preventDefault();
   var input = document.getElementById('code-search').value;
   if(validateInput(input)){
-    var url = "./provideTestFeedback.html?testId=" + input;
+    var url = "./provideTestFeedback.php?testId=" + input;
     fetchTest(url, input);
   }
 }
@@ -11,7 +11,7 @@ function redirectToTest(event) {
   event.preventDefault();
   var input = document.getElementById('code-search').value;
   if(validateInput(input)){
-    var url = "./makeTest.html?testId=" + input;
+    var url = "./makeTest.php?testId=" + input;
     fetchTest(url, input);
   }
 }

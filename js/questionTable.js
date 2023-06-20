@@ -172,10 +172,10 @@ function applyFilters(token) {
           const feedbackCell = document.createElement("td");
           const feedbackButton = document.createElement("button");
           if (token) {
-            feedbackButton.setAttribute('onclick', 'location.href="./viewFeedback.html?questionId='+question.id+'"');
+            feedbackButton.setAttribute('onclick', 'location.href="./viewFeedback.php?questionId='+question.id+'"');
             feedbackButton.innerHTML = '<span class="fa fa-comments"></span>';
           } else {
-            feedbackButton.setAttribute('onclick', 'location.href="./provideQuestionFeedback.html?questionId='+question.id+'"');
+            feedbackButton.setAttribute('onclick', 'location.href="./provideQuestionFeedback.php?questionId='+question.id+'"');
             feedbackButton.innerHTML = '<span class="fa fa-comment-dots"></span>';
           }
           feedbackCell.appendChild(feedbackButton);

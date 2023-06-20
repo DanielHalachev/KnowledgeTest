@@ -10,17 +10,9 @@
     <script src="../js/theme.js"></script>
   </head>
   <body>
-    <header>
-      <nav>
-        <h1><a href="./index.html">KnowledgeTest</a></h1>
-        <ul>
-          <a href="./index.html"><li>Правене на тест</li></a>
-          <a href=""><li>Създаване на тест</li></a>
-          <a href="./login.php"><li>Вписване</li></a>
-          <a href="./register.php"><li>Регистрация</li></a>
-        </ul>
-      </nav>
-    </header>
+<?php
+include "../includes/guestUserHeader.php";
+?>
     <main>
       <section class="activity">
         <h2>Регистрация</h2>
@@ -65,12 +57,8 @@
         </form>
       </dialog>
     </main>
-    <footer>
-      <p>KnowledgeTest 2023&copy;</p>
-      <p>
-        <span>Даниел Халачев, </span>
-        <span>Стефан Велев</span>
-      </p>
-    </footer>
+    <?php
+    include "../includes/footer.php";
+    ?>
   </body>
 </html>

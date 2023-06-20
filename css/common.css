@@ -228,6 +228,8 @@ dialog {
   max-width: 400px;
   margin: auto;
   outline: none;
+  background-color: var(--surface-color);
+  color: var(--on-surface);
 }
 
 form {
