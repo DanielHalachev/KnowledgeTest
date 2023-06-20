@@ -59,4 +59,24 @@ class JWT
     $paddedData = str_pad($data, strlen($data) % 4, '=', STR_PAD_RIGHT);
     return base64_decode(str_replace(['-', '_'], ['+', '/'], $paddedData));
   }
+
+  public static function isValid($token) {
+    if (!$token) {
+      return false;
+    }
+    $payload = JWT::decode($token, getenv("SECRET_KEY"));
+    if (!$payload) {
+      return false;
+    }
+    if (!$payload["expiration"] || strtotime($payload["expiration"]) > time()) {
+      return false;
+    }
+    if (!array_key_exists("userId", $payload)) {
+      return false;
+    }
+    if (filter_var($payload["userId"], FILTER_VALIDATE_INT) === false) {
+      return false;
+    }
+    return true;
+  }
 }

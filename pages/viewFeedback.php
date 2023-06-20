@@ -1,3 +1,18 @@
+<?php
+require_once "../libs/JWT.php";
+if (!isset($_COOKIE['token'])) {
+  header('Location: question.php');
+  exit;
+}
+
+$token = $_COOKIE['token'];
+
+if (!JWT::isValid($token)) {
+  header('Location: index.php');
+  exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="bg">
   <head>
