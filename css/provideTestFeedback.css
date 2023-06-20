@@ -94,3 +94,10 @@ article.feedback p {
   grid-area: paragraph;
 }
 
+.correct {
+  color: green;
+}
+
+.incorrect {
+  color: red;
+}
