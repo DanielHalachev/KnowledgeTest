@@ -17,11 +17,11 @@ include "../includes/guestUserHeader.php";
       <section class="activity">
         <h2>Регистрация</h2>
         <form method="post" action="register.php">
-          <input type="text" name="firstName" placeholder="Въведете име"/>
-          <input type="text" name="lastName" placeholder="Въведете фамилия"/>
-          <input type="email" name="email" placeholder="Въведете имейл"/>
-          <input type="password" name="password" placeholder="Въведете парола"/>
-          <input type="password" name="repeatedPassword" placeholder="Повторете паролата"/>
+          <input type="text" name="firstName" placeholder="Въведете име *"/>
+          <input type="text" name="lastName" placeholder="Въведете фамилия *"/>
+          <input type="email" name="email" placeholder="Въведете имейл *"/>
+          <input type="password" name="password" placeholder="Въведете парола *"/>
+          <input type="password" name="repeatedPassword" placeholder="Повторете паролата *"/>
           <button type="submit"><span class="fa fa-user-plus"></span>Регистрация</button>
         </form>
       </section>
@@ -34,6 +34,11 @@ include "../includes/guestUserHeader.php";
         $email = $_POST['email'];
         $password = $_POST['password'];
         $repeatedPassword = $_POST['repeatedPassword'];
+
+        if ($email == null || $email == '' || $firstName == null || $firstName == '' || $lastName == null || $lastName ==''
+        || $password == null || $password == '' || $repeatedPassword == null || $repeatedPassword == '') {
+            return;
+        }
 
         if ($password != $repeatedPassword) {
           echo "<p>Паролите не съвпадат. Моля повторете избраната от Вас парола</p>";
