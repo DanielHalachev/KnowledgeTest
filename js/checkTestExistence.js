@@ -1,21 +1,44 @@
-document.getElementById("test-by-code").addEventListener("submit", function(event) {
-  event.preventDefault(); 
+function redirectToPreview(event) {
+  event.preventDefault();
+  var input = document.getElementById('code-search').value;
+  if(validateInput(input)){
+    var url = "./provideTestFeedback.html?testId=" + input;
+    fetchTest(url, input);
+  }
+}
 
-  var code = document.getElementById("code-search").value;
-  var errorMessage = document.getElementById("error-message");
+function redirectToTest(event) {
+  event.preventDefault();
+  var input = document.getElementById('code-search').value;
+  if(validateInput(input)){
+    var url = "./makeTest.html?testId=" + input;
+    fetchTest(url, input);
+  }
+}
 
-  var httpRequest = new XMLHttpRequest();
-  httpRequest.open("GET", "./../libs/checkTestExistence.php?code=" + encodeURIComponent(code), true);
-  httpRequest.onload = function() {
-    if (httpRequest.status === 200) {
-      var exists = JSON.parse(httpRequest.responseText).exists;
+function validateInput(input) {
+  if(input === "") {
+    const errorMessage = document.getElementById("error-message");
+    errorMessage.showModal();
+    return false;
+  }
+  return true;
+}
 
-      if (exists) {
-        window.location.href = "./../pages/testPreview.php?code=" + encodeURIComponent(code);
-      } else {
+function fetchTest(url, input){
+  fetch("../api/tests/" + input)
+    .then((response) => {
+      if(response.ok) {
+        window.location.href = url;
+      }
+      else {
+        const errorMessage = document.getElementById("error-message");
         errorMessage.showModal();
       }
-    }
-  };
-  httpRequest.send();
-});
+    })
+    .catch((error) => {
+      const errorMessage = document.getElementById("error-message").innerHTML = "Изглежда има проблем. Не можем да ви покажем теста в момента";
+      errorMessage.showModal();
+      console.error("Couldn't fetch test:", error);
+    });
+}

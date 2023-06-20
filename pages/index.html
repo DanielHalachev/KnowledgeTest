@@ -34,19 +34,20 @@
     </header>
     <main>
       <section class="activity">
-        <h2>Правене на тест</h2>
-        <form id="test-by-code" action="testPreview.php">
+        <h2>Преглед на тест</h2>
+        <form id="test-by-code">
           <input id="code-search" type="search" name="code-search" placeholder="Въведете код на тест">
-          <button type="submit"><span class="fa fa-search"></span>Търсене</button>
+          <button type="submit" onclick="redirectToPreview(event)"><span class="fa fa-comment-dots"></span>Ревю</button>
+          <button type="submit" onclick="redirectToTest(event)"><span class="fa fa-list-check"></span>Тест</button>
         </form>
         <dialog id="error-message">
           <form>
-            <p>Не намерихме тест по въведения от Вас код. Моля проверете изписването на кода или потърсете теста чрез търсачката. </p>
+            <p>Не намерихме тест по въведения от Вас код. Моля проверете изписването на кода. </p>
             <button type="submit" formmethod="dialog">OK</button>
           </form>
         </dialog>
         <p>или</p>
-        <button type="button" onclick="window.location = '#questions'"><span class="fa fa-list"></span>Преглед на списъка</button>
+        <button type="button" onclick="window.location = '#questions'"><span class="fa fa-list"></span>Преглед на въпрос</button>
       </section>
       <section class="activity">
         <h2>Създаване на тест</h2>
