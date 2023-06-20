@@ -14,7 +14,7 @@ aside {
   grid-area: aside;
   display: grid;
   padding: 20px;
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7) inset;
+  box-shadow: 2px 2px 2px var(--strong-box-shadow) inset;
 }
 
 aside section img {
@@ -23,7 +23,7 @@ aside section img {
   border-radius: 50%;
   object-fit: cover;
   flex: 100px 0 0;
-  border: 1px solid #009eff;
+  border: 1px solid var(--weakened-accent-color);
 }
 
 aside section img:hover {
@@ -39,11 +39,6 @@ footer {
 }
 
 main {
-  /* display: grid; */
-  /* grid-template-rows: 1fr 1fr; */
-  /* grid-template-areas: */
-  /*   "content" */
-  /*   "content"; */
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -69,12 +64,12 @@ main section.activity article {
 }
 
 section.activity section.item {
-  background-color: #009eff;
-  color: #ffffff;
+  background-color: var(--weakened-accent-color);
+  color: var(--on-weakened-accent);
   padding: 20px;
   border-radius: 5px;
   margin-bottom: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px var(--box-shadow);
   transition: transform 0.3s ease;
   width: 90%;
 }

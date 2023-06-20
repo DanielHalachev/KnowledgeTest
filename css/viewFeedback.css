@@ -9,7 +9,7 @@ main section.activity article.feedback {
   grid-template-areas: "textarea difficulty" "textarea slider" "textarea button";
   gap: 10px;
   width: 100%;
-  border: 1px solid #007bff;
+  border: 1px solid var(--accent-color);
   border-radius: 20px;
   padding: 30px;
 }
@@ -19,7 +19,7 @@ main section.activity article.feedback {
   width: 100%;
   text-align: center;
   display: block;
-  border-left: 3px solid #007bff;
+  border-left: 3px solid var(--accent-color);
   padding: 10px;
   display: flex;
   flex-direction: row;

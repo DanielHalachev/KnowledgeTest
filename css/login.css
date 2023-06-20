@@ -31,8 +31,6 @@ main {
 
 @media (min-width: 768px) {
   main {
-    /* padding: 100px; */
-    /* gap: 100px; */
     grid-template-rows: 1fr;
     grid-template-columns: 1fr;
     grid-template-areas:

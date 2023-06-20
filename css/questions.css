@@ -1,9 +1,9 @@
 /* Table */
 table.questions-table {
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: var(--primary-color);
   border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px var(--box-shadow);
   border-collapse: collapse;
   margin-bottom: 20px;
 }
@@ -14,28 +14,24 @@ table.questions-table {
   text-align: center;
 }
 
-/* .questions-table th input, .questions-table th select { */
-/*   width: 100%; */
-/* } */
-
 .questions-table th {
   font-weight: bold;
-  background-color: rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: var(--table-th);
+  color: var(--on-table-th);
+  border-bottom: 1px solid var(--strong-table-border);
   cursor: pointer;
 }
 
 .questions-table td {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--weak-table-border);
 }
 
 .questions-table td:nth-child(4) {
   text-align: left;
 }
 
-/* Answers Accordion Row */
 tr.answers-row {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: var(--subtable-color);
 }
 
 .answers-table {
@@ -52,25 +48,19 @@ tr.answers-row {
 .answers-table th {
   font-weight: bold;
   background-color: rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid var(--strong-table-border);
 }
 
 .answers-table td {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--weak-table-border);
 }
 
 .answers-table td:nth-child(2) {
   text-align: left;
 }
 
-/* Styling for selected row */
-tr.selected-row {
-  background-color: rgba(0, 123, 255, 0.1);
-}
-
-/* Styling for hover effect */
 tr.question-row:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: var(--subtable-color);
   cursor: pointer;
 }
 
@@ -111,7 +101,6 @@ section.item p.actions {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: flex-start;
-  /* align-items: flex-start; */
   gap: 10px;
   width: 100%;
 }

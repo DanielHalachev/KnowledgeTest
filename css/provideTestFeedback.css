@@ -59,19 +59,20 @@ main section.activity form {
   }
 }
 
-article.question {
+main section.activity article.question {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: flex-start;
   padding: 20px;
   border-radius: 20px;
-  border: 1px solid #007bff;
+  border: 1px solid var(--accent-color);
   min-width: 400px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  background-color: #ffffff;
+  background-color: var(--surface-color);
+  color: var(--on-surface);
 }
 
 article.feedback {
@@ -95,9 +96,9 @@ article.feedback p {
 }
 
 .correct {
-  color: green;
+  color: var(--positive);
 }
 
 .incorrect {
-  color: red;
+  color: (--negative);
 }

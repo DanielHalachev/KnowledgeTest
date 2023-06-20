@@ -51,12 +51,12 @@ main section.activity article {
 }
 
 main section.activity section.test {
-  background-color: #009eff;
-  color: #ffffff;
+  background-color: var(--weakened-accent-color);
+  color: var(--on-weakened-accent);
   padding: 20px;
   border-radius: 5px;
   margin-bottom: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px var(--box-shadow);
   transition: transform 0.3s ease;
   width: 90%;
   margin: auto;
