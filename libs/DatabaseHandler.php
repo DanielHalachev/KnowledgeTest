@@ -39,11 +39,10 @@ class DatabaseHandler {
 
     $uploaderId = $connection->lastInsertId();
 
-    $sql2 = "INSERT INTO `tests` (uploaderId, authorId, topicId) VALUES (?, NULL, 1)";
+    $sql2 = "INSERT INTO `tests` (uploaderId, author, topic) VALUES (?, NULL, NULL)";
     $statement2 = $connection->prepare($sql2);
     $statement2->bindParam(1, $uploaderId, PDO::PARAM_INT);
     $statement2->execute();
-    
 
     return ($statement->rowCount() > 0);
   }
