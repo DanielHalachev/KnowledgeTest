@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="./../css/common.css" rel="stylesheet" type="text/css">
     <link href="./../css/home.css" rel="stylesheet" type="text/css">
+    <script src="../js/theme.js"></script>
     <script src="https://kit.fontawesome.com/5c9473fc67.js" crossorigin="anonymous"></script>
     <script src="../js/logout.js" defer></script>
     <script src="../js/toggleNav.js"></script>
@@ -129,13 +130,13 @@
                   testSection.classList.add("item");
 
                   const testLink = document.createElement("a");
-                  testLink.href = `testPreview.php?testId=${test.id}`;
+                  testLink.href = `provideTestFeedback.html?testId=${test.id}`;
 
                   const testTitle = document.createElement("h3");
-                  testTitle.textContent = test.topic;
+                  testTitle.textContent = test.topic ?? "Без име";
 
                   const testAuthor = document.createElement("p");
-                  testAuthor.textContent = `Автор: ${test.author}`;
+                  testAuthor.textContent = `Автор: ${test.author ?? "Неизвестен автор"}`;
 
                   const testQuestions = document.createElement("p");
                   testQuestions.textContent = `Брой въпроси: ${questions.length}`;
@@ -167,7 +168,6 @@
             questionsSection.innerHTML += "<p>Нямате създадени въпроси.</p>";
           } else {
             questions.forEach((question) => {
-              // Fetch test information for each question
               fetch(`../api/tests/${question.testId}`, {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -179,20 +179,20 @@
                   questionSection.classList.add("item");
 
                   const questionLink = document.createElement("a");
-                  questionLink.href = `questions.html?questionId=${question.id}`;
+                  questionLink.href = `./viewFeedback.html?questionId=${question.id}`;
 
                   const questionLabel = document.createElement("h3");
                   questionLabel.textContent = question.label;
 
                   const questionTest = document.createElement("p");
-                  questionTest.textContent = `Test: ${test.topic}`;
+                  questionTest.textContent = `Тест: ${test.topic ?? "Тест без име"}`;
 
                   const questionAim = document.createElement("p");
-                  questionAim.textContent = `Aim: ${question.aim}`;
+                  questionAim.textContent = `Цел: ${question.aim ?? ""}`;
 
                   const questionIsMultipleChoice = document.createElement("p");
-                  questionIsMultipleChoice.textContent = `Multiple Choice: ${
-                    question.isMultipleChoice ? "Yes" : "No"
+                  questionIsMultipleChoice.textContent = `С множествен избор: ${
+                    question.isMultipleChoice ? "Да" : "Не"
                   }`;
 
                   questionLink.appendChild(questionLabel);

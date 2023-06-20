@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="./../css/common.css" rel="stylesheet" type="text/css">
     <link href="./../css/login.css" rel="stylesheet" type="text/css">
+    <script src="../js/theme.js"></script>
     <script src="https://kit.fontawesome.com/5c9473fc67.js" crossorigin="anonymous"></script>
   </head>
   <body>

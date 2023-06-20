@@ -7,6 +7,7 @@
     <link href="./../css/common.css" rel="stylesheet" type="text/css">
     <link href="./../css/login.css" rel="stylesheet" type="text/css">
     <script src="https://kit.fontawesome.com/5c9473fc67.js" crossorigin="anonymous"></script>
+    <script src="../js/theme.js"></script>
   </head>
   <body>
     <header>
@@ -31,8 +32,6 @@
           <input type="password" name="repeatedPassword" placeholder="Повторете паролата"/>
           <button type="submit"><span class="fa fa-user-plus"></span>Регистрация</button>
         </form>
-        <p>или</p>
-        <button type="button"><span class="fa fa-google"></span>Вписване с Google</button>
       </section>
       <dialog id="error-message">
         <form>
@@ -52,7 +51,7 @@
           if (DatabaseHandler::getUser($email) == NULL) {
             $result = DatabaseHandler::createUser($email, $hashedPassword, $firstName, $lastName, NULL, NULL);
             if ($result) {
-              echo "<p>Моля потвърдете регистрацията чрез имейл.</p>";
+              echo "<p>Успешна регистрация.</p>";
             } else {
               echo "<p>Нещо се обърка. Моля опитайте отново.</p>";
             }
