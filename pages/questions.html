@@ -138,6 +138,12 @@
     });
     </script>
     <script>
+    function copyToClipboard(text){
+      navigator.clipboard.writeText(text)
+        .catch((error) => console.error("Couldn't write to clipboard: ", error));
+    }
+    </script>
+    <script>
     function deleteTest(id) {
       const parent = event.target.parentNode.parentNode;
       dialog = parent.querySelector("dialog");
@@ -164,7 +170,6 @@
           })
             .then(response => response.json())
             .then(data => {
-              // Iterate over the questions and delete each one
               const deletePromises = data.map(question => {
                 return fetch(`../api/questions/${question.id}`, {
                   method: "DELETE",
@@ -174,10 +179,8 @@
                 });
               });
 
-              // Wait for all question deletions to complete
               Promise.all(deletePromises)
                 .then(() => {
-                  // Delete the test itself
                   fetch(`../api/tests/${id}`, {
                     method: "DELETE",
                     headers: {
@@ -245,20 +248,26 @@
                   testSection.setAttribute('data-id', test.id);
 
                   const testLink = document.createElement("a");
-                  testLink.href = `testPreview.php?testId=${test.id}`;
+                  testLink.href = `./provideTestFeedback.html?testId=${test.id}`;
+                  testLink.target = "_blank";
 
                   const testTitle = document.createElement("h3");
-                  testTitle.textContent = test.topic;
+                  testTitle.innerHTML = '<span class="fa fa-share-from-square"></span> ' + test.topic;
 
                   const testAuthor = document.createElement("p");
-                  testAuthor.textContent = `Автор: ${test.author}`;
+                  testAuthor.textContent = `Автор: ${test.author ?? "Неизвестен"}`;
 
                   const testQuestions = document.createElement("p");
                   testQuestions.textContent = `Въпроси: ${questions.length}`;
 
                   const actions = document.createElement("p");
                   actions.classList.add("actions");
-                  actions.innerHTML = `<button onclick="exportToMoodleXML('${test.id}', '${test.topic}')"><span class="fa fa-file-export"></span>Експорт</button><button onclick="deleteTest('${test.id}')"><span class="fa fa-trash"></span>Изтриване</button>`;
+                  actions.innerHTML = `
+                    <button onclick="copyToClipboard('${test.id}')">
+                      <span class="fa fa-clipboard"></span> Код</button>
+                    <button onclick="exportToMoodleXML('${test.id}', '${test.topic}')">
+                      <span class="fa fa-file-export"></span>Експорт</button>
+                    <button onclick="deleteTest('${test.id}')"><span class="fa fa-trash"></span>Изтриване</button>`;
 
                   testLink.appendChild(testTitle);
                   testSection.appendChild(testLink);
@@ -267,7 +276,9 @@
                   testSection.appendChild(actions);
                   testsSection.appendChild(testSection);
                   testSection.addEventListener("click", function(){
-                    if (event.target.tagName.toLowerCase() === "button") {
+                    if (event.target.tagName.toLowerCase() === "button" ||
+                      event.target.tagName.toLowerCase() == "h3" ||
+                      event.target.tagName.toLowerCase() == "a"){
                       return;
                     } else {
                       document.getElementById("testSelect").value=testSection.dataset.id;
