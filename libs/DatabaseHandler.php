@@ -234,7 +234,7 @@ class DatabaseHandler {
         return (int) $statement->fetchColumn();
       }
 
-      return self::createTest($uploaderId, $facultyNumber, null);
+      return self::createTest($uploaderId, $facultyNumber, date('Y-m-d').'-'.$facultyNumber);
     }
   }
 
