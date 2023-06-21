@@ -318,7 +318,7 @@ if (!JWT::isValid($token)) {
       var formData = new FormData();
       formData.append('csvFile', file);
       var authToken = getToken();
-      fetch('./../libs/readCSV.html', {
+      fetch('./../libs/readCSV.php', {
         method: 'POST',
         headers: {
           'Authorization': 'Bearer ' + authToken
