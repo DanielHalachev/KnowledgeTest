@@ -129,7 +129,7 @@ if (!JWT::isValid($token)) {
             testsSection.innerHTML += "<p>Нямате създадени тестове.<p>";
           } else {
             tests.forEach((test) => {
-              fetch(`../api/questions?testId=${test.id}`, {
+              fetch(`../api/questions?testId=${test.id}&size=-1`, {
                 headers: {
                   Authorization: `Bearer ${token}`,
                 },
