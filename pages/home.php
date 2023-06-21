@@ -104,7 +104,6 @@ if (!JWT::isValid($token)) {
         .then(response => response.json())
         .then(data => {
           const {email, firstName, lastName, profilePicture } = data[0];
-          console.log(email);
 
           document.getElementById("firstName").textContent = firstName;
           document.getElementById("lastName").textContent = lastName;
@@ -237,7 +236,7 @@ include "../includes/loggedInUserHeader.php";
         <p id="email">Email</p>
         <input type="file" name="profilePicture" id="imageUpload" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
         <button type="button" onclick="logout()"><span class="fa fa-power-off"></span>Изход</button>
-        <button type="button" onclick="document.getElementById('changePasswordDialog').showModal()"><span class="fa fa-key"></span>Смяна на паролата</button>
+        <button type="button" onclick="document.getElementById('changePasswordDialog').show()"><span class="fa fa-key"></span>Смяна на паролата</button>
         <dialog id="changePasswordDialog">
           <form>
             <input type="password" id="newPassword" placeholder="Въведете новата парола">
@@ -247,7 +246,7 @@ include "../includes/loggedInUserHeader.php";
             <button type="submit" formmethod="dialog" onclick="changePassword()">Смяна</button>
           </form> 
         </dialog>
-        <button type="button" onclick="document.getElementById('deleteAccountDialog').showModal()"><span class="fa fa-user-slash"></span>Изтриване на профила</button>
+        <button type="button" onclick="document.getElementById('deleteAccountDialog').show()"><span class="fa fa-user-slash"></span>Изтриване на профила</button>
         <dialog id="deleteAccountDialog">
           <form>
             <p>Сигурни ли сте, че искате да изтриете акаунта си и всички данни в него?</p>
