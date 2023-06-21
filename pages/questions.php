@@ -252,7 +252,7 @@ if (!JWT::isValid($token)) {
           } else {
             tests.forEach((test) => {
               // Fetch questions for each test
-              fetch(`../api/questions?testId=${test.id}`, {
+              fetch(`../api/questions?testId=${test.id}&size=-1`, {
                 headers: {
                   Authorization: `Bearer ${getToken()}`,
                 },
