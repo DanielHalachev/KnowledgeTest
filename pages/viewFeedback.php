@@ -49,7 +49,7 @@ if (!JWT::isValid($token)) {
           // questionSection.classList.add("item");
 
           const questionLabel = document.createElement("h3");
-          questionLabel.innerHTML = question.label;
+          questionLabel.textContent = question.label;
           questionSection.appendChild(questionLabel);
 
           const fieldset = document.createElement("form");
@@ -59,11 +59,17 @@ if (!JWT::isValid($token)) {
             .then((answers) => {
               answers.forEach((answer) => {
                 const label = document.createElement("label");
+                const input = document.createElement("input");
+                input.disabled = true;
+                input.checked = answer.isCorrect;
                 if (question.isMultipleChoice) {
-                  label.innerHTML = `<input type="checkbox" disabled ${ answer.isCorrect ? "checked" : "" }>${ answer.label }`;
+                  input.type = "checkbox";
                 } else {
-                  label.innerHTML = `<input type="radio" disabled ${ answer.isCorrect ? "checked" : ""}>${ answer.label }`;
+                  input.type = "radio";
                 }
+                label.appendChild(input);
+                const labelText = document.createTextNode(answer.label);
+                label.appendChild(labelText);
                 fieldset.appendChild(label);
               }) 
             })
@@ -75,20 +81,36 @@ if (!JWT::isValid($token)) {
             .then((response) => response.json())
             .then((test) => {
               const questionTest = document.createElement("p");
-              questionTest.innerHTML = `<b>Тест: </b>${test.topic ?? "Неизвестен"}`;
+              const testTopic = test.topic ?? "Неизвестен";
+              const testTopicTextNode = document.createTextNode(testTopic);
+              const testTopicBold = document.createElement("b");
+              testTopicBold.appendChild(testTopicTextNode);
+              questionTest.appendChild(testTopicBold);
               questionSection.appendChild(questionTest);
+
               const questionAuthor = document.createElement("p");
-              questionAuthor.innerHTML = `<b>Автор на теста: </b>${test.author ?? "Неизвестен"}`;
+              const testAuthor = test.author ?? "Неизвестен";
+              const testAuthorTextNode = document.createTextNode(testAuthor);
+              const testAuthorBold = document.createElement("b");
+              testAuthorBold.appendChild(testAuthorTextNode);
+              questionAuthor.appendChild(testAuthorBold);
               questionSection.appendChild(questionAuthor);
             })
             .catch((error) => console.log("Couldn't fetch name of test", error));
 
           const questionAim = document.createElement("p");
-          questionAim.innerHTML = `<b>Цел: </b>${question.aim}`;
+          const questionAimText = document.createTextNode(question.aim);
+          const questionAimBold = document.createElement("b");
+          questionAimBold.appendChild(questionAimText);
+          questionAim.appendChild(questionAimBold);
           questionSection.appendChild(questionAim);
 
           const questionIsMultipleChoice = document.createElement("p");
-          questionIsMultipleChoice.innerHTML = `<b>С множествен избор: </b>${question.isMultipleChoice ? "Да" : "Не"}`;
+          const isMultipleChoiceText = question.isMultipleChoice ? "Да" : "Не";
+          const isMultipleChoiceTextNode = document.createTextNode(isMultipleChoiceText);
+          const questionIsMultipleChoiceBold = document.createElement("b");
+          questionIsMultipleChoiceBold.appendChild(isMultipleChoiceTextNode);
+          questionIsMultipleChoice.appendChild(questionIsMultipleChoiceBold);
           questionSection.appendChild(questionIsMultipleChoice);
         })
         .catch((error) =>
@@ -117,7 +139,7 @@ if (!JWT::isValid($token)) {
               container.appendChild(text);
 
               const difficulty = document.createElement("span");
-              difficulty.innerHTML = "Сложност: " + feedback.complexity + "/ 10";
+              difficulty.textContent = "Сложност: " + feedback.complexity + "/ 10";
               container.appendChild(difficulty);
 
               const slider = document.createElement("input");

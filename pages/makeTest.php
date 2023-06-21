@@ -27,7 +27,7 @@
         .then((response) => response.json())
         .then((test) => {
           title = document.querySelector("main section h2");
-          title.innerHTML = test.topic ?? "Тест без име";
+          title.textContent = test.topic ?? "Тест без име";
         })
         .catch((error) => console.error("Couldn't fetch test by Id: ", error));
 
@@ -47,7 +47,7 @@
             }
 
             const questionLabel = document.createElement("h3");
-            questionLabel.innerHTML = questionCounter + ". " + question.label;
+            questionLabel.textContent = questionCounter + ". " + question.label;
             questionSection.appendChild(questionLabel);
 
             fetch("../api/answers?questionId=" + question.id)
@@ -58,10 +58,13 @@
                 }
                 answers.forEach((answer) => {
                   const label = document.createElement("label");
+                  const input = document.createElement("input");
+                  input.name = question.id;
+                  input.value = answer.id;
                   if (question.isMultipleChoice) {
-                    label.innerHTML = `<input type="checkbox" name="${question.id}" value="${answer.id}">${ answer.label }`;
+                    input.type = "checkbox";
                   } else {
-                    label.innerHTML = `<input type="radio" name="${question.id}" value=${answer.id}>${ answer.label }`;
+                    input.type = "radio";
                   }
                   questionSection.appendChild(label);
                 })
@@ -73,7 +76,7 @@
         .catch((error) => console.error("Couldn't fetch a question:", error));
       submitButton = document.createElement("button");
       submitButton.setAttribute("type", "submit");
-      submitButton.innerHTML = "Изпращане";
+      submitButton.textContent = "Изпращане";
       submitButton.setAttribute("onclick", "submitAnswers()");
       mainSection.appendChild(submitButton);
     });
@@ -128,7 +131,7 @@
         .then((scores) => {
           result = scores.reduce((total, score) => total + score, 0);
           const totalScore = (result / numberOfQuestions) * 100;
-          resultMessage.innerHTML = `Вашият резултат е ${totalScore.toFixed(2)}%`;
+          resultMessage.textContent = `Вашият резултат е ${totalScore.toFixed(2)}%`;
           resultDialog.showModal();
         })
         .catch((error) => console.error("Couldn't fetch answers: ", error));

@@ -27,7 +27,7 @@
         .then((response) => response.json())
         .then((test) => {
           title = document.querySelector("main section h2");
-          title.innerHTML = test.topic ?? "Тест без име";
+          title.textContent = test.topic ?? "Тест без име";
         })
         .catch((error) => console.error("Couldn't fetch test by Id: ", error));
 
@@ -43,7 +43,7 @@
             questionSection.classList.add("question");
 
             const questionLabel = document.createElement("h3");
-            questionLabel.innerHTML = questionCounter + ". " + question.label;
+            questionLabel.textContent = questionCounter + ". " + question.label;
             questionSection.appendChild(questionLabel);
 
             fetch("../api/answers?questionId=" + question.id)
@@ -54,11 +54,17 @@
                 }
                 answers.forEach((answer) => {
                   const label = document.createElement("label");
+                  const input = document.createElement("input");
+                  input.disabled = true;
+                  input.checked = answer.isCorrect;
                   if (question.isMultipleChoice) {
-                    label.innerHTML = `<input type="checkbox" disabled ${ answer.isCorrect ? "checked" : "" }>${ answer.label }`;
+                    input.type = "checkbox";
                   } else {
-                    label.innerHTML = `<input type="radio" disabled ${ answer.isCorrect ? "checked" : ""}>${ answer.label }`;
+                    input.type = "radio";
                   }
+                  label.appendChild(input);
+                  const labelText = document.createTextNode(answer.label);
+                  label.appendChild(labelText);
                   questionSection.appendChild(label);
                 }) 
               })
@@ -71,7 +77,7 @@
             const text = document.createElement("textarea");
             feedbackSection.appendChild(text);
             const complexity = document.createElement("p");
-            complexity.innerHTML = "Сложност от 1 до 10:";
+            complexity.textContent = "Сложност от 1 до 10:";
             feedbackSection.appendChild(complexity);
             const slider = document.createElement("input");
             slider.setAttribute("type", "range");
@@ -86,7 +92,7 @@
         .catch((error) => console.error("Couldn't fetch a question:", error));
       submitButton = document.createElement("button");
       submitButton.setAttribute("type", "submit");
-      submitButton.innerHTML = "Изпращане";
+      submitButton.textContent = "Изпращане";
       submitButton.setAttribute("onclick", "submitFeedback()");
       mainSection.appendChild(submitButton);
     });
@@ -108,10 +114,10 @@
             const resultDialog = document.querySelector("#resultDialog");
             const resultMessage = resultDialog.querySelector("form p");
             if(response.ok) {
-              resultMessage.innerHTML = "Изпращането е успешно!";
+              resultMessage.textContent = "Изпращането е успешно!";
             }
             else {
-              resultMessage.innerHTML = "Изпращането не беше успешно. Опитайте отново."
+              resultMessage.textContent = "Изпращането не беше успешно. Опитайте отново."
             }
             resultDialog.showModal();
           })
