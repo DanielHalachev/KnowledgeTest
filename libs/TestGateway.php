@@ -81,7 +81,10 @@ class TestGateway {
     if ($limit !== -1){
       $sql .= " LIMIT :limit";
     }
-    $sql .= " OFFSET :offset";
+
+    if ($offset !== 0) {
+      $sql .= " OFFSET :offset";
+    }
 
     $statement = $this->connection->prepare($sql);
 
@@ -92,7 +95,10 @@ class TestGateway {
     if ($limit !== -1){
       $statement->bindValue(':limit', $limit, PDO::PARAM_INT);
     }
-    $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+    if ($offset !== 0) {
+      $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
+    }
 
     $statement->execute();
 
@@ -131,6 +137,13 @@ class TestGateway {
   }
   
   public function delete(int $id): int {
+    $questionGateway = new QuestionGateway(new DatabaseConnection());
+    $filters = [];
+    $filters["testId"] = $id;
+    $questions = $questionGateway->getAll($filters, null, 0, -1);
+    foreach ($questions as $question) {
+      $questionGateway->delete($question["id"]);
+    }
     $sql = "DELETE FROM `tests` WHERE id = :id";
     $statement = $this->connection->prepare($sql);
     $statement->bindValue(":id", $id, PDO::PARAM_INT);

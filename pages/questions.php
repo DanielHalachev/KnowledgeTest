@@ -178,25 +178,25 @@ if (!JWT::isValid($token)) {
         confirmButton.setAttribute("formmethod", "dialog");
         confirmButton.addEventListener("click", function() {
           const token = getToken(); // Get the authorization token
-          fetch(`../api/questions?testId=${id}`, {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          })
-            .then(response => response.json())
-            .then(data => {
-              const deletePromises = data.map(question => {
-                return fetch(`../api/questions/${question.id}`, {
-                  method: "DELETE",
-                  headers: {
-                    Authorization: `Bearer ${token}`
-                  }
-                });
-              });
-
-              Promise.all(deletePromises)
-                .then(() => {
+          // fetch(`../api/questions?testId=${id}`, {
+          //   method: "GET",
+          //   headers: {
+          //     Authorization: `Bearer ${token}`
+          //   }
+          // })
+          //   .then(response => response.json())
+          //   .then(data => {
+          //     const deletePromises = data.map(question => {
+          //       return fetch(`../api/questions/${question.id}`, {
+          //         method: "DELETE",
+          //         headers: {
+          //           Authorization: `Bearer ${token}`
+          //         }
+          //       });
+          //     });
+          //
+          //     Promise.all(deletePromises)
+          //       .then(() => {
                   fetch(`../api/tests/${id}`, {
                     method: "DELETE",
                     headers: {
@@ -210,14 +210,14 @@ if (!JWT::isValid($token)) {
                     .catch(error => {
                       console.log("Error deleting the test:", error);
                     });
-                })
-                .catch(error => {
-                  console.log("Error deleting questions:", error);
-                });
-            })
-            .catch(error => {
-              console.log("Error fetching questions:", error);
-            });
+                // })
+                // .catch(error => {
+                //   console.log("Error deleting questions:", error);
+                // });
+            // })
+            // .catch(error => {
+            //   console.log("Error fetching questions:", error);
+            // });
         });
         form.appendChild(text);
         form.appendChild(cancelButton);

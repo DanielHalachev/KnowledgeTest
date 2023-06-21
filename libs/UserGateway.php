@@ -120,6 +120,13 @@ class UserGateway {
   }
 
   public function delete(string $id): int {
+    $testGateway = new TestGateway(new DatabaseConnection());
+    $filters = [];
+    $filters["uploaderId"] = $id;
+    $tests = $testGateway->getAll($filters, null, 0, -1);
+    foreach ($tests as $test) {
+      $testGateway->delete($test["id"]);
+    }
     $sql = "DELETE FROM `users` WHERE id=:id";
     $statement = $this->connection->prepare($sql);
     $statement->bindValue(":id", $id, PDO::PARAM_INT);

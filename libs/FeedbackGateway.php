@@ -74,7 +74,10 @@ class FeedbackGateway {
     if ($limit !== -1){
       $sql .= " LIMIT :limit";
     }
-    $sql .= " OFFSET :offset";
+
+    if ($offset !== 0){
+      $sql .= " OFFSET :offset";
+    }
 
     $statement = $this->connection->prepare($sql);
 
@@ -85,7 +88,10 @@ class FeedbackGateway {
     if ($limit !== -1){
       $statement->bindValue(':limit', $limit, PDO::PARAM_INT);
     }
-    $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+    if ($offset !== 0){
+      $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
+    }
 
     $statement->execute();
 
