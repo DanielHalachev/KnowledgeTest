@@ -21,8 +21,6 @@ include "../includes/guestUserHeader.php";
           <input type="password" name="password" placeholder="Въведете парола"/>
           <button type="submit"><span class="fa fa-right-to-bracket"></span>Вписване</button>
         </form>
-        <p>или</p>
-        <button type="button"><span class="fa fa-google"></span>Вписване с Google</button>
       </section>
       <dialog id="error-message">
           <form>
