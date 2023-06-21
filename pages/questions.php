@@ -270,6 +270,9 @@ if (!JWT::isValid($token)) {
                   const testTitle = document.createElement("h3");
                   testTitle.innerHTML = '<span class="fa fa-share-from-square"></span> ' + test.topic;
 
+                  const testId = document.createElement("p");
+                  testId.textContent = `Номер: ${test.id}`;
+
                   const testAuthor = document.createElement("p");
                   testAuthor.textContent = `Автор: ${test.author ?? "Неизвестен"}`;
 
@@ -287,6 +290,7 @@ if (!JWT::isValid($token)) {
 
                   testLink.appendChild(testTitle);
                   testSection.appendChild(testLink);
+                  testSection.appendChild(testId);
                   testSection.appendChild(testAuthor);
                   testSection.appendChild(testQuestions);
                   testSection.appendChild(actions);
