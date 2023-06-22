@@ -102,3 +102,7 @@ article.feedback p {
 .incorrect {
   color: var(--negative);
 }
+
+main section.activity.test form {
+  grid-template-columns: 1fr;
+}

@@ -146,7 +146,7 @@
 include "../includes/guestUserHeader.php";
 ?>
     <main>
-      <section class="activity">
+      <section class="activity test">
         <h2></h2>
         <form>
         </form>
