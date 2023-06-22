@@ -1,6 +1,17 @@
 <?php
 // SERVER CONFIGURATION VARIABLES
 
+// Site Variables
+define('SITE_NAME', 'KnowledgeTest');
+define('SITE_CREATOR_NAME_1', 'Даниел Халачев');
+define('SITE_CREATOR_FN_1', '62547');
+define('SITE_CREATOR_EMAIL_1', 'dihalachev@uni-sofia.bg');
+define('SITE_CREATOR_NAME_2', 'Стефан Велев');
+define('SITE_CREATOR_FN_2', '62537');
+define('SITE_CREATOR_EMAIL_2', 'sdvelev@uni-sofia.bg');
+define('SITE_INFO', 'This project was created during 2023 year, on Web Technologies course at FMI, Sofia University, lead by: prof. Milen Petrov');
+define('SITE_DESCRIPTION', 'Software system for generating, importing, exporting and solving tests');
+
 // Database Variables
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'tests');
