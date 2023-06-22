@@ -94,19 +94,6 @@ class DatabaseHandler {
     return (int) $connection->lastInsertId();
   }
 
-
-  public static function createAuthor(string $facultyNumber, string $firstName = NULL, string $lastName = NULL) : int {
-    $sql = "INSERT INTO `authors` (facultyNumber, firstName, lastName) VALUES (?, ?, ?)";
-    $connection = (new DatabaseConnection())->getConnection();
-    $statement = $connection->prepare($sql);
-    $statement->bindParam(1, $facultyNumber);
-    $statement->bindParam(2, $firstName);
-    $statement->bindParam(3, $lastName);
-
-    $statement->execute();
-    return (int) $connection->lastInsertId();
-  }
-
   public static function createQuestionType(int $questionTypeId, string $description = NULL) : int {
     $sql = "INSERT INTO `questiontypes` (id, description) VALUES (?, ?)";
     $connection = (new DatabaseConnection())->getConnection();
@@ -116,16 +103,6 @@ class DatabaseHandler {
 
     $statement->execute();
     return $questionTypeId;
-  }
-
-  public static function createTopic(string $name = NULL) : int {
-    $sql = "INSERT INTO `topics` (name) VALUES (?)";
-    $connection = (new DatabaseConnection())->getConnection();
-    $statement = $connection->prepare($sql);
-    $statement->bindParam(1, $name);
-
-    $statement->execute();
-    return (int) $connection->lastInsertId();
   }
 
   public static function createTest(int $uploaderId, string $author, string $topic = NULL) : int {
@@ -142,28 +119,6 @@ class DatabaseHandler {
     return (int) $connection->lastInsertId();
   }
 
-  public static function getAuthorId(?string $facultyNumber, bool $toCreate = true) : ?int {
-
-    if ($facultyNumber === null) {
-      return null;
-    }
-
-    $sql = "SELECT id FROM `authors` WHERE facultyNumber = ?";
-    $connection = (new DatabaseConnection())->getConnection();
-    $statement = $connection->prepare($sql);
-    $statement->bindParam(1, $facultyNumber);
-    $resultOfQuery = $statement->execute();
-
-    if ($resultOfQuery && $statement->rowCount() > 0) {
-      return (int) $statement->fetchColumn();
-    }
-
-    if ($toCreate) {
-      return self::createAuthor($facultyNumber);
-    }
-    return -1;
-  }
-
   public static function getQuestionTypeId(string $questiontypeId) : int {
     $sql = "SELECT id FROM `questiontypes` WHERE id = ?";
     $connection = (new DatabaseConnection())->getConnection();
@@ -176,28 +131,6 @@ class DatabaseHandler {
     }
 
     return self::createQuestionType($questiontypeId);
-  }
-
-  public static function getTopicId(?string $name, bool $toCreate = true) : ?int {
-
-    if ($name === null) {
-      return null;
-    }
-
-    $sql = "SELECT id FROM `topics` WHERE name = ?";
-    $connection = (new DatabaseConnection())->getConnection();
-    $statement = $connection->prepare($sql);
-    $statement->bindParam(1, $name);
-    $resultOfQuery = $statement->execute();
-
-    if ($resultOfQuery && $statement->rowCount() > 0) {
-      return (int) $statement->fetchColumn();
-    }
-
-    if ($toCreate) {
-      return self::createTopic($name);
-    }
-    return -1;
   }
 
   public static function getTestId(int $uploaderId, string $facultyNumber, string $topicName = NULL) : int {
@@ -231,107 +164,5 @@ class DatabaseHandler {
       return self::createTest($uploaderId, $facultyNumber, date('Y-m-d').'-'.$facultyNumber);
     }
   }
-
-  public static function getAllTestsByUploaderId(
-      ?int $topicId = null,
-      ?int $authorId = null,
-      ?int $uploaderId = null
-  ): array {
-    $sql = "SELECT * FROM `tests` WHERE ";
-    $conditions = [];
-
-    if ($topicId !== null) {
-      $conditions[] = "topicId = ?";
-    }
-    if ($authorId !== null) {
-      $conditions[] = "authorId = ?";
-    }
-    if ($uploaderId !== null) {
-      $conditions[] = "uploaderId = ?";
-    }
-
-    $sql .= implode(" AND ", $conditions);
-
-    $connection = (new DatabaseConnection())->getConnection();
-    $statement = $connection->prepare($sql);
-
-    $parameterNumber = 1;
-
-    if ($topicId !== null) {
-      $statement->bindParam($parameterNumber++, $topicId);
-    }
-    if ($authorId !== null) {
-      $statement->bindParam($parameterNumber++, $authorId);
-    }
-    if ($uploaderId !== null) {
-      $statement->bindParam($parameterNumber++, $uploaderId);
-    }
-
-    if ($parameterNumber === 1) {
-      $sql = "SELECT * FROM `tests`";
-      $statement = $connection->prepare($sql);
-    }
-
-    $statement->execute();
-    $tests = [];
-
-    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-      $test = new Test($row['id'], $row['uploaderId'], $row['authorId'], $row['topicId']);
-      $tests[] = $test;
-    }
-
-    return $tests;
-  }
-
-  public static function getTopicNameByTopicId(?int $topicId) : ?string {
-    $sql = "SELECT name FROM `topics` WHERE id = ?";
-    $connection = (new DatabaseConnection())->getConnection();
-    $statement = $connection->prepare($sql);
-    $statement->bindParam(1, $topicId);
-    $statement->execute();
-
-    return $statement->fetchColumn();
-  }
-
-  public static function getFacultyNumberByAuthorId(?int $authorId) : ?string {
-    $sql = "SELECT facultyNumber FROM `authors` WHERE id = ?";
-    $connection = (new DatabaseConnection())->getConnection();
-    $statement = $connection->prepare($sql);
-    $statement->bindParam(1, $authorId);
-    $statement->execute();
-
-    return $statement->fetchColumn();
-  }
-
-  public static function getQuestionsCountByTestId(int $testId) : ?int {
-    $sql = "SELECT COUNT(id ) FROM `questions` WHERE testId = ?";
-    $connection = (new DatabaseConnection())->getConnection();
-    $statement = $connection->prepare($sql);
-    $statement->bindParam(1, $testId);
-    $statement->execute();
-
-    return $statement->fetchColumn();
-  }
-
-  public static function getSummaryForAllTests(?string $topic = NULL,
-                                               ?string $facultyNumber = NULL,
-                                               ?int $uploaderId = NULL) : ?array {
-    $result = [];
-    $tests = self::getAllTestsByUploaderId(self::getTopicId($topic, false),
-                                           self::getAuthorId($facultyNumber, false),
-                                           $uploaderId);
-
-    foreach ($tests as $test) {
-      $summary = [
-          'topicName' => self::getTopicNameByTopicId($test->getTopicId()),
-          'facultyNumber' => self::getFacultyNumberByAuthorId($test->getAuthorId()),
-          'questionsCount' => self::getQuestionsCountByTestId($test->getId())
-      ];
-
-      $result[] = $summary;
-    }
-
-    return $result;
-}
 }
 ?>
