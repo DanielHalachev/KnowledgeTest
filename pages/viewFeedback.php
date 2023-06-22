@@ -84,6 +84,7 @@ if (!JWT::isValid($token)) {
               const testTopic = test.topic ?? "Неизвестен";
               const testTopicTextNode = document.createTextNode(testTopic);
               const testTopicBold = document.createElement("b");
+              testTopicBold.textContent = "Тест: ";
               testTopicBold.appendChild(testTopicTextNode);
               questionTest.appendChild(testTopicBold);
               questionSection.appendChild(questionTest);
@@ -92,6 +93,7 @@ if (!JWT::isValid($token)) {
               const testAuthor = test.author ?? "Неизвестен";
               const testAuthorTextNode = document.createTextNode(testAuthor);
               const testAuthorBold = document.createElement("b");
+              testAuthorBold.textContent = "Автор: "; 
               testAuthorBold.appendChild(testAuthorTextNode);
               questionAuthor.appendChild(testAuthorBold);
               questionSection.appendChild(questionAuthor);
@@ -101,6 +103,7 @@ if (!JWT::isValid($token)) {
           const questionAim = document.createElement("p");
           const questionAimText = document.createTextNode(question.aim);
           const questionAimBold = document.createElement("b");
+          questionAimBold.textContent = "Цел: "
           questionAimBold.appendChild(questionAimText);
           questionAim.appendChild(questionAimBold);
           questionSection.appendChild(questionAim);
@@ -109,6 +112,7 @@ if (!JWT::isValid($token)) {
           const isMultipleChoiceText = question.isMultipleChoice ? "Да" : "Не";
           const isMultipleChoiceTextNode = document.createTextNode(isMultipleChoiceText);
           const questionIsMultipleChoiceBold = document.createElement("b");
+          questionIsMultipleChoiceBold.textContent = "С множествен избор: ";
           questionIsMultipleChoiceBold.appendChild(isMultipleChoiceTextNode);
           questionIsMultipleChoice.appendChild(questionIsMultipleChoiceBold);
           questionSection.appendChild(questionIsMultipleChoice);

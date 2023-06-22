@@ -66,6 +66,9 @@
                   } else {
                     input.type = "radio";
                   }
+                  label.appendChild(input);
+                  const text = document.createTextNode(answer.label);
+                  label.appendChild(text);
                   questionSection.appendChild(label);
                 })
               })
@@ -99,7 +102,7 @@
             const incorrectAnswers = answers.filter((answer) => !answer.isCorrect).map((answer) => answer.id);
             let score = 0;
 
-            if (questionSection.classList.contains("multiple-choice")) {
+            // if (questionSection.classList.contains("multiple-choice")) {
               const correctSelectedAnswers = selectedAnswers.filter((selectedAnswer) => {
                 return correctAnswers.some((correctAnswer) => correctAnswer == selectedAnswer.value);
               });
@@ -118,11 +121,11 @@
               const incorrectRatio = incorrectSelectedAnswers.length / answers.length;
 
               score = Math.max(correctRatio - incorrectRatio, 0);
-            } else {
-              const selectedAnswer = selectedAnswers[0];
-              const isCorrect = correctAnswers.some((correctAnswer) => correctAnswer.id === selectedAnswer.value);
-              score = isCorrect ? 1 : 0;
-            }
+            // } else {
+            //   const selectedAnswer = selectedAnswers[0];
+            //   const isCorrect = correctAnswers.some((correctAnswer) => correctAnswer === selectedAnswer.value);
+            //   score = isCorrect ? 1 : 0;
+            // }
             return score;
           })
           .catch((error) => console.error(`Could post answers for question ${questionId}: `, error));

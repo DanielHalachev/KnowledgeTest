@@ -100,5 +100,5 @@ article.feedback p {
 }
 
 .incorrect {
-  color: (--negative);
+  color: var(--negative);
 }
