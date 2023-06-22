@@ -15,6 +15,7 @@ class DatabaseHandler {
     if ($statement->rowCount() == 0) {
       return NULL;
     }
+
     return (new User(
       $result['id'], 
       $result['googleId'], 
@@ -36,13 +37,6 @@ class DatabaseHandler {
     $statement->bindParam(5, $lastName);
     $statement->bindParam(6, $profilePicture, PDO::PARAM_LOB);
     $statement->execute();
-
-    $uploaderId = $connection->lastInsertId();
-
-    $sql2 = "INSERT INTO `tests` (uploaderId, author, topic) VALUES (?, NULL, NULL)";
-    $statement2 = $connection->prepare($sql2);
-    $statement2->bindParam(1, $uploaderId, PDO::PARAM_INT);
-    $statement2->execute();
 
     return ($statement->rowCount() > 0);
   }
