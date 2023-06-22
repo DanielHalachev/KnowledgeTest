@@ -8,6 +8,7 @@
     <link href="./../css/index.css" rel="stylesheet" type="text/css">
     <link href="./../css/questions.css" rel="stylesheet" type="text/css">
     <script src="../js/theme.js"></script>
+    <script src="../js/logout.js"></script>
     <script src="./../js/checkTestExistence.js" defer></script>
     <script src="./../js/closeDialogOnOutsideClick.js" defer></script>
     <script src="./../js/questionTable.js" defer></script>
@@ -22,9 +23,14 @@
     </script>
   </head>
   <body>
-<?php
-include "../includes/guestUserHeader.php";
-?>
+    <?php
+    require_once "../libs/JWT.php";
+    if (isset($_COOKIE['token']) && JWT::isValid($_COOKIE['token'])) {
+      include "../includes/loggedInUserHeader.php";
+    } else {
+      include "../includes/guestUserHeader.php";
+    }
+    ?>
     <main>
       <section class="activity">
         <h2>Преглед на тест</h2>
