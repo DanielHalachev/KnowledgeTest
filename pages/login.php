@@ -17,8 +17,8 @@ include "../includes/guestUserHeader.php";
       <section class="activity">
         <h2>Вписване</h2>
         <form method="post" action="login.php">
-          <input type="email" name="email" placeholder="Въведете имейл"/>
-          <input type="password" name="password" placeholder="Въведете парола"/>
+          <input type="email" name="email" placeholder="Въведете имейл *"/>
+          <input type="password" name="password" placeholder="Въведете парола *"/>
           <button type="submit"><span class="fa fa-right-to-bracket"></span>Вписване</button>
         </form>
       </section>
