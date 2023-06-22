@@ -1,7 +1,10 @@
+<?php
+include_once "./../libs/Settings.php";
+?>
 <footer>
-  <p>KnowledgeTest 2023&copy;</p>
+  <p><?php echo SITE_NAME?> 2023&copy;</p>
   <p>
-    <span>Даниел Халачев, </span>
-    <span>Стефан Велев</span>
+    <span><?php echo SITE_CREATOR_NAME_1?>, </span>
+    <span><?php echo SITE_CREATOR_NAME_2?></span>
   </p>
 </footer>

@@ -1,7 +1,10 @@
+<?php
+include_once "./../libs/Settings.php";
+?>
 <header>
   <nav>
     <span class="fa fa-bars" id="menu" onclick="toggleNav()"></span>
-    <h1><a href="./index.php">KnowledgeTest</a></h1>
+    <h1><a href="./index.php"><?php echo SITE_NAME?> </a></h1>
     <ul>
       <a href="./home.php"><li><span class="fa fa-user"></span>Потребител</li></a>
       <a href="./questions.php"><li><span class="fa fa-question"></span>Въпроси</li></a>
