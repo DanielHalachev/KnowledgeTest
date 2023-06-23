@@ -22,7 +22,6 @@ $questionGateway = new QuestionGateway($databaseConnection);
 $testGateway = new TestGateway($databaseConnection);
 $feedbackGateway = new FeedbackGateway($databaseConnection);
 $questionTypeGateway = new QuestionTypeGateway($databaseConnection);
-$sessionGateway = new SessionGateway($databaseConnection);
 
 session_start();
 switch (explode("?", $parts[3])[0]) {
@@ -49,13 +48,6 @@ switch (explode("?", $parts[3])[0]) {
   case "types":
     $controller = new QuestionTypeController($questionTypeGateway);
     $controller->processRequest($_SERVER["REQUEST_METHOD"], $_GET, $id);
-    break;
-  case "session":
-    $controller = new SessionController($sessionGateway);
-    $controller->processRequest(
-      $_SERVER["REQUEST_METHOD"],
-      (array) json_decode(file_get_contents("php://input"), true)
-    );
     break;
   default:
     http_response_code(404);
