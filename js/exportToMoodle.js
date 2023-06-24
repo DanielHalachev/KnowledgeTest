@@ -132,7 +132,7 @@ function exportToMoodleXML(testId, topic) {
                     const xmlString = generateMoodleXML(questions, topic);
                     const element = document.createElement('a');
                     element.setAttribute('href', 'data:text/xml;charset=utf-8,' + encodeURIComponent(xmlString));
-                    element.setAttribute('download', 'moodleXmlFormat.xml');
+                    element.setAttribute('download', topic + "_MoodleXmlFormat.xml");
                     element.style.display = 'none';
                     document.body.appendChild(element);
                     element.click();
