@@ -143,7 +143,7 @@ include "../includes/guestUserHeader.php";
         <form>
           <p></p>
           <button type="submit" formmethod="dialog">Затваряне</button>
-          <button type="submit" formmethod="dialog" onclick='document.location = "./index.html"'>Към началната страница</button>
+          <button type="submit" formmethod="dialog" onclick='document.location = "./index.php"'>Към началната страница</button>
         </form>
       </dialog>
     </main>
